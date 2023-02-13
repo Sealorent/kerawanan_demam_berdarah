@@ -136,32 +136,6 @@
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3 col-md-6">
-                                    <label class="form-label" for="temperatur">Temperatur <small>(°C)</small> <span
-                                            id="required">*</span></label>
-                                    <input type="number" step="0.01"
-                                        class="form-control  @error('temperatur') is-invalid @enderror"
-                                        name="temperatur" value="{{ old('temperatur',$klimatologi->temperatur)    }}"
-                                        placeholder="Masukkan Rata-rata Temperatur" min="0" disabled>
-                                    @error('temperatur')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group mb-3 col-md-6">
-                                    <label class="form-label" for="kelembaban">Kelembapan <small>(%)</small> <span
-                                            id="required">*</span></label>
-                                    <input type="number" step="0.01"
-                                        class="form-control  @error('kelembaban') is-invalid @enderror"
-                                        name="kelembaban" value="{{ old('kelembaban' ,$klimatologi->kelembapan) }}"
-                                        placeholder="Masukkan Rata-rata Kelembaban" min="0" disabled>
-                                    @error('kelembaban')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group mb-3 col-md-6">
                                     <label class="form-label" for="curah_hujan">Curah Hujan</label>
                                     <small>(mm)</small>
                                     <span id="required">*</span>
@@ -257,7 +231,15 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-start">
+                                    <p class="p-1">CH : {{ $rule->ch }}</p>
+                                    <p class="p-1">HH : {{ $rule->hh }}</p>
+                                    <p class="p-1">ABJ : {{ $rule->abj }}</p>
+                                    <p class="p-1">HI : {{ $rule->hi }}</p>
+                                </div>
 
+                            </div>
                             <div class="mt-5 ">
                                 <div class="d-flex justify-content-end">
                                     <a class="btn btn-outline-primary"

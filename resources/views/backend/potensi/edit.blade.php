@@ -135,32 +135,7 @@
                                     </div>
                                     @enderror
                                 </div>
-                                <div class="form-group mb-3 col-md-6">
-                                    <label class="form-label" for="temperatur">Temperatur <small>(°C)</small> <span
-                                            id="required">*</span></label>
-                                    <input type="number" step="0.01"
-                                        class="form-control  @error('temperatur') is-invalid @enderror"
-                                        name="temperatur" value="{{ old('temperatur',$klimatologi->temperatur)    }}"
-                                        placeholder="Masukkan Rata-rata Temperatur" min="0">
-                                    @error('temperatur')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group mb-3 col-md-6">
-                                    <label class="form-label" for="kelembaban">Kelembapan <small>(%)</small> <span
-                                            id="required">*</span></label>
-                                    <input type="number" step="0.01"
-                                        class="form-control  @error('kelembaban') is-invalid @enderror"
-                                        name="kelembaban" value="{{ old('kelembaban' ,$klimatologi->kelembapan) }}"
-                                        placeholder="Masukkan Rata-rata Kelembaban" min="0">
-                                    @error('kelembaban')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
+
                                 <div class="form-group mb-3 col-md-6">
                                     <label class="form-label" for="curah_hujan">Curah Hujan</label>
                                     <small>(mm)</small>
@@ -189,9 +164,34 @@
                                     </div>
                                     @enderror
                                 </div>
+                                <div class="form-group mb-3 col-md-6">
+                                    <label class="form-label" for="temperatur">Suhu<small>(°C)</small> <span
+                                            id="required">*</span></label>
+                                    <input type="number" step="0.01"
+                                        class="form-control  @error('suhu') is-invalid @enderror"
+                                        name="suhu" value="{{ old('suhu',$klimatologi->suhu)    }}"
+                                        placeholder="Masukkan Rata-rata Suhu" min="0">
+                                    @error('suhu')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group mb-3 col-md-6">
+                                    <label class="form-label" for="kelembaban">Kelembaban <small>(%)</small> <span
+                                            id="required">*</span></label>
+                                    <input type="number" step="0.01"
+                                        class="form-control  @error('kelembaban') is-invalid @enderror"
+                                        name="kelembaban" value="{{  old('kelembaban',$klimatologi->kelembaban) }}"
+                                        placeholder="Masukkan Rata-rata Kelembaban" min="0">
+                                    @error('kelembaban')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div> 
                                 <div class="form-group mb-3 col-md-12" id="caption">
-                                    <p class="text-warning">Ket: Masukkan Rata-Rata Temperatur, Kelembaban, dan Curah
-                                        Hujan</p>
+                                    <p class="text-warning">Ket: Masukkan Rata-Rata Hari Hujan , Curah Hujan, Kelembaban, dan Suhu</p>
                                 </div>
                                 <div class="form-group mb-3 col-md-6">
                                     <label class="form-label" for="rumah_diperiksa">Jumlah Rumah Diperiksa<span
@@ -251,6 +251,18 @@
                                         name="kasus_dbd" value="{{ old('kasus_dbd',$vektor->kasus_dbd) }}"
                                         placeholder="Masukkan jumlah Kasus DBD" min="0">
                                     @error('kasus_dbd')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group mb-3 col-md-6">
+                                    <label class="form-label" for="kasus_dbd">Incident Rate</label>
+                                    <span id="required">*</span>
+                                    <input type="number" class="form-control @error('ir') is-invalid @enderror"
+                                        name="ir" value="{{ old('ir',$vektor->ir) }}"
+                                        placeholder="Masukkan Incident Rate" min="0">
+                                    @error('ir')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

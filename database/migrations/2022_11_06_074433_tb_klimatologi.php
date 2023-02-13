@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_kecamatan');
             $table->foreign('id_kecamatan')->references('id')->on('tm_kecamatan')->onDelete('cascade');
-            $table->float('temperatur');
-            $table->float('kelembapan');
             $table->float('curah_hujan');
             $table->float('hari_hujan');
+            $table->float('kelembaban');
+            $table->float('suhu');
             $table->integer('triwulan');
             $table->timestamps();
         });

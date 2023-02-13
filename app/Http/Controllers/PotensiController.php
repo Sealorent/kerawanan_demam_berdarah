@@ -7,9 +7,11 @@ use App\Models\GA;
 use App\Models\Kecamatan;
 use App\Models\Klimatologi;
 use App\Models\Potensi;
+use App\Models\Rule;
 use App\Models\Vektor;
 use App\Service\FuzzyService;
 use App\Service\GeneticService;
+use App\Service\TestFuzzy;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -19,12 +21,12 @@ class PotensiController extends Controller
 {
 
     public $fuzzyService;
-    public $geneticService;
+    public $testFuzzy;
 
-    public function __construct(FuzzyService $fuzzyService, GeneticService $geneticService)
+    public function __construct(FuzzyService $fuzzyService, TestFuzzy $testFuzzy)
     {
         $this->fuzzyService = $fuzzyService;
-        $this->geneticService = $geneticService;
+        $this->testFuzzy = $testFuzzy;
     }
 
     public function triwulan()
@@ -90,7 +92,7 @@ class PotensiController extends Controller
         }
     }
 
-    public function pagina($items, $perPage = 5, $page = null, $options = [])
+    public function pagina($items, $perPage = 34, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
@@ -107,30 +109,30 @@ class PotensiController extends Controller
         $triwulan = $this->triwulan();
         $month = $request->triwulan != null ? $this->searchTri($request->triwulan) : $this->searchTri($this->getMonth(date('m')));
         $tri = $request->triwulan != null ? $request->triwulan : $this->getMonth(date('m'));
-        $reqyear = $request->year ?: date('Y');
+        $reqyear = $request->year ?: date('Y', strtotime('-2 year'));
         $dataKli = Potensi::select(
             'tb_potensi.*',
             'tb_potensi.id_kecamatan',
             'tm_kecamatan.nama_kecamatan',
             'tb_fuzzy.nilai as hasilFuzzy',
             'tb_fuzzy.id_rule as ruleFuzzy',
-            'tb_ga.nilai as hasilGa',
-            'tb_ga.id_rule as ruleGa'
         )
             ->join('tm_kecamatan', 'tm_kecamatan.id', 'tb_potensi.id_kecamatan')
             ->join('tb_fuzzy', 'tb_fuzzy.id', 'tb_potensi.id_fuzzy')
-            ->join('tb_ga', 'tb_ga.id', 'tb_potensi.id_ga')
             // ->join('tm_rule', 'tm_rule.id', 'tb_ga.id_rule')
             // ->join('tm_rule', 'tm_rule.id', 'tb_fuzzy.id_rule')
             ->where('tb_potensi.triwulan', $tri)
             ->whereYear('tb_potensi.date', $reqyear)
-            ->orderBy('tm_kecamatan.nama_kecamatan')->get();
+            ->orderBy('tm_kecamatan.nama_kecamatan')
+            // ->orderByDesc('updated_at')
+            ->get();
 
         $data = array();
         // groupBy berdasarkan nama ruas
         $data = collect($dataKli)->groupBy('nama_kecamatan')->map(function ($item) {
             return $item;
         });
+        // return $data;
         $data = $this->pagina($data);
         $data->setPath('/admin-panel/data-potensi/potensi');
         return view('backend.potensi.index', compact('data', 'reqyear', 'triwulan', 'month'));
@@ -155,13 +157,13 @@ class PotensiController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         // Hasil Fuzzy array[0] = nilai,array[1] = id_rule
         $fuzzy = $this->fuzzyService->Fuzzy($request);
-        $genetic = $this->geneticService->Genetic($request);
+        // return $fuzzy;
         $nilaiFuzzy = $fuzzy[0];
         $idRuleFuzzy = $fuzzy[1];
-        $nilaiGenetic = $genetic[0];
-        $idRuleGenetic = $genetic[1];
+
 
         $cek = Klimatologi::select('tb_klimatologi.id_kecamatan', 'tb_klimatologi.created_at')
             ->where('tb_klimatologi.id_kecamatan', $request->kecamatan)
@@ -180,9 +182,7 @@ class PotensiController extends Controller
         } else {
             $request->validate([
                 'kecamatan' => 'required',
-                'temperatur' => 'required',
                 'curah_hujan' => 'required',
-                'kelembaban' => 'required',
                 'rumah_diperiksa' => 'required',
                 'rumah_positif' => 'required',
                 'kasus_dbd' => 'required',
@@ -194,8 +194,6 @@ class PotensiController extends Controller
                 'int' => ':Attribute harus berupa angka.',
             ], [
                 'kecamatan' => 'Kecamatan',
-                'temperatur' => 'Temperatur',
-                'curah_hujan' => 'Curah Hujan',
                 'kelembaban' => 'Kelembaban',
             ]);
 
@@ -210,6 +208,7 @@ class PotensiController extends Controller
                 $vektor->rumah_positif = $request->rumah_positif;
                 $vektor->hi = $request->hi;
                 $vektor->abj = $request->abj;
+                $vektor->ir = $request->ir;
                 $vektor->kasus_dbd = $request->kasus_dbd;
                 $vektor->date = $request->tahun . "-01-01";
                 $vektor->save();
@@ -218,10 +217,10 @@ class PotensiController extends Controller
                 $klimatologi = new Klimatologi();
                 $klimatologi->id_kecamatan = $request->kecamatan;
                 $klimatologi->triwulan = $request->triwulan;
-                $klimatologi->temperatur = $request->temperatur;
                 $klimatologi->curah_hujan = $request->curah_hujan;
-                $klimatologi->kelembapan = $request->kelembaban;
                 $klimatologi->hari_hujan = $request->hari_hujan;
+                $klimatologi->kelembaban = $request->kelembaban;
+                $klimatologi->suhu = $request->suhu;
                 $klimatologi->date =  $request->tahun . "-01-01";
                 $klimatologi->save();
 
@@ -231,21 +230,16 @@ class PotensiController extends Controller
                 $fuzzy->nilai = $nilaiFuzzy;
                 $fuzzy->save();
 
-                // Fuzzy GA
-                $fuzzyGA = new GA();
-                $fuzzyGA->id_rule = $idRuleGenetic;
-                $fuzzyGA->nilai = $nilaiGenetic;
-                $fuzzyGA->save();
 
                 $potensi = new Potensi();
                 $potensi->id_kecamatan = $request->kecamatan;
                 $potensi->id_vektor = $vektor->id;
                 $potensi->id_klimatologi = $klimatologi->id;
                 $potensi->id_fuzzy = $fuzzy->id;
-                $potensi->id_ga = $fuzzyGA->id;
                 $potensi->date = $request->tahun . "-01-01";
                 $potensi->triwulan = $request->triwulan;
                 $potensi->save();
+
                 return redirect()->back()->with('success', "Data Berhasil Ditambahkan");
             } catch (\Exception $e) {
                 return redirect()->back()->withError($e->getMessage());
@@ -268,7 +262,9 @@ class PotensiController extends Controller
         $vektor = Vektor::find($data->id_vektor);
         $klimatologi = Klimatologi::find($data->id_klimatologi);
         $kecamatan = Kecamatan::all();
-        return view('backend.potensi.show', compact('data', 'kecamatan', 'vektor', 'klimatologi'));
+        $fuzzy = Fuzzy::find($data->id_fuzzy);
+        $rule = Rule::find($fuzzy->id_rule);
+        return view('backend.potensi.show', compact('data', 'kecamatan', 'vektor', 'klimatologi', 'rule'));
     }
 
     /**
@@ -296,16 +292,13 @@ class PotensiController extends Controller
     public function update(Request $request, $id)
     {
         $potensi = Potensi::find($id);
-
-        // return $request;
         $fuzzy = $this->fuzzyService->Fuzzy($request);
+        // return $fuzzy;
         $nilaiFuzzy = $fuzzy[0];
         $idRuleFuzzy = $fuzzy[1];
 
         $request->validate([
-            'temperatur' => 'required',
             'curah_hujan' => 'required',
-            'kelembaban' => 'required',
             'rumah_diperiksa' => 'required',
             'rumah_positif' => 'required',
             'kasus_dbd' => 'required',
@@ -316,9 +309,7 @@ class PotensiController extends Controller
             'int' => ':Attribute harus berupa angka.',
         ], [
             'kecamatan' => 'Kecamatan',
-            'temperatur' => 'Temperatur',
             'curah_hujan' => 'Curah Hujan',
-            'kelembaban' => 'Kelembaban',
         ]);
 
 
@@ -329,15 +320,16 @@ class PotensiController extends Controller
             $vektor->rumah_positif = $request->rumah_positif;
             $vektor->hi = $request->hi;
             $vektor->abj = $request->abj;
+            $vektor->ir = $request->ir;
             $vektor->kasus_dbd = $request->kasus_dbd;
             $vektor->update();
 
             //Klimatologi
             $klimatologi = Klimatologi::find($potensi->id_klimatologi);
-            $klimatologi->temperatur = $request->temperatur;
             $klimatologi->curah_hujan = $request->curah_hujan;
-            $klimatologi->kelembapan = $request->kelembaban;
             $klimatologi->hari_hujan = $request->hari_hujan;
+            $klimatologi->kelembaban = $request->kelembaban;
+            $klimatologi->suhu = $request->suhu;
             $klimatologi->update();
 
             // Fuzzy
@@ -345,13 +337,7 @@ class PotensiController extends Controller
             $fuzzy->id_rule = $idRuleFuzzy;
             $fuzzy->nilai = $nilaiFuzzy;
             $fuzzy->update();
-
-            // Fuzzy GA
-            $fuzzyGA = GA::find($potensi->id_ga);
-            $fuzzyGA->id_rule = $idRuleFuzzy;
-            $fuzzyGA->nilai = $nilaiFuzzy;
-            $fuzzyGA->update();
-
+            $potensi->updated_at = now();
 
             $potensi->update();
             return redirect()->back()->with('success', "Data Berhasil Ditambahkan");
@@ -370,6 +356,14 @@ class PotensiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $data = Potensi::findOrFail($id);
+            $data->delete();
+            return redirect()->back()->with('success', "Data Berhasil Ditambahkan");
+        } catch (\Exception $e) {
+            return redirect()->back()->withError($e->getMessage());
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withError($e->getMessage());
+        }
     }
 }

@@ -61,7 +61,8 @@
                                         <div class="input-group">
                                             <input type="text" id="datepicker"
                                                 class="form-control  @error('tahun') is-invalid @enderror" name="tahun"
-                                                value="{{ old('tahun')}}" placeholder="Tahun Data Demografi" />
+                                                value="{{ old('tahun',date('Y')-2)}}"
+                                                placeholder="Tahun Data Demografi" />
                                             @error('tahun')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -90,7 +91,8 @@
                                             <select id="triwulan" name="triwulan"
                                                 class="select2 form-select  @error('triwulan') is-invalid @enderror">
                                                 <option value="">--- Pilih triwulan ---</option>
-                                                @foreach ($triwulan as $key => $value )
+                                                <option value="1" selected>Triwulan 1</option>
+                                                {{-- @foreach ($triwulan as $key => $value )
                                                 @if ( old('triwulan') )
                                                 <option value="{{ $key }}" selected>{{ $value
                                                     }}
@@ -99,7 +101,7 @@
                                                 <option value="{{ $key }}">{{ $value }}
                                                 </option>
                                                 @endif
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                             @error('triwulan')
                                             <div class="invalid-feedback">
@@ -133,20 +135,20 @@
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3 col-md-6">
-                                    <label class="form-label" for="temperatur">Temperatur <small>(°C)</small> <span
+                                    <label class="form-label" for="temperatur">Suhu<small>(°C)</small> <span
                                             id="required">*</span></label>
                                     <input type="number" step="0.01"
-                                        class="form-control  @error('temperatur') is-invalid @enderror"
-                                        name="temperatur" value="{{ old('temperatur')    }}"
-                                        placeholder="Masukkan Rata-rata Temperatur" min="0">
-                                    @error('temperatur')
+                                        class="form-control  @error('suhu') is-invalid @enderror"
+                                        name="suhu" value="{{ old('suhu')    }}"
+                                        placeholder="Masukkan Rata-rata Suhu" min="0">
+                                    @error('suhu')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3 col-md-6">
-                                    <label class="form-label" for="kelembaban">Kelembapan <small>(%)</small> <span
+                                    <label class="form-label" for="kelembaban">Kelembaban <small>(%)</small> <span
                                             id="required">*</span></label>
                                     <input type="number" step="0.01"
                                         class="form-control  @error('kelembaban') is-invalid @enderror"
@@ -157,7 +159,7 @@
                                         {{ $message }}
                                     </div>
                                     @enderror
-                                </div>
+                                </div> 
                                 <div class="form-group mb-3 col-md-6">
                                     <label class="form-label" for="curah_hujan">Curah Hujan</label>
                                     <small>(mm)</small>
@@ -187,7 +189,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3 col-md-12" id="caption">
-                                    <p class="text-warning">Ket: Masukkan Rata-Rata Temperatur, Kelembaban, dan Curah
+                                    <p class="text-warning">Ket: Masukkan Rata-Rata Hari Hujan & Curah
                                         Hujan</p>
                                 </div>
                                 <div class="form-group mb-3 col-md-6">
@@ -218,6 +220,7 @@
                                 </div>
                                 <div class="form-group mb-3 col-md-6">
                                     <label class="form-label" for="hi">House Index <small>(%)</small> </label>
+                                    <span id="required">*</span>
                                     <input type="number" step="0.01"
                                         class="form-control  @error('hi') is-invalid @enderror" name="hi" id='hi'
                                         value="{{ old('hi') }}" placeholder="House Index" min="0" readonly>
@@ -228,7 +231,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3 col-md-6">
-                                    <label class="form-label" for="abj">Angka Bebas Jentik <small>(%)</small> </label>
+                                    <label class="form-label" for="abj">Angka Bebas Jentik<small>(%)</small> </label>
+                                    <span id="required">*</span>
                                     <input type="number" step="0.01"
                                         class="form-control  @error('abj') is-invalid @enderror" name="abj" id="abj"
                                         value="{{ old('abj') }}" placeholder="Angka Bebas Jentik" min="0" readonly>
@@ -241,10 +245,22 @@
                                 <div class="form-group mb-3 col-md-6">
                                     <label class="form-label" for="kasus_dbd">Kasus DBD</label>
                                     <span id="required">*</span>
-                                    <input type="number" class="form-control" @error('kasus_dbd') is-invalid @enderror
-                                        name="kasus_dbd" value="{{ old('kasus_dbd'  ) }}"
+                                    <input type="number" class="form-control @error('kasus_dbd') is-invalid @enderror"
+                                        name="kasus_dbd" value="{{ old('kasus_dbd') }}"
                                         placeholder="Masukkan jumlah Kasus DBD" min="0">
                                     @error('kasus_dbd')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group mb-3 col-md-6">
+                                    <label class="form-label" for="kasus_dbd">Incident Rate</label>
+                                    <span id="required">*</span>
+                                    <input type="number" class="form-control @error('ir') is-invalid @enderror"
+                                        name="ir" value="{{ old('ir') }}"
+                                        placeholder="Masukkan Incident Rate" min="0">
+                                    @error('ir')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

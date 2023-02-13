@@ -14,7 +14,7 @@ class RuleController extends Controller
      */
     public function index()
     {
-        $data = Rule::paginate(18);
+        $data = Rule::orderBy('ch')->paginate(18);
         return view('backend.rule.index', compact('data'));
     }
 
@@ -25,7 +25,7 @@ class RuleController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend.rule.create');
     }
 
     /**
@@ -36,7 +36,14 @@ class RuleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $st = new Rule();
+        $st->ch = $request->ch;
+        $st->hh = $request->hh;
+        $st->abj = $request->abj;
+        $st->hi = $request->hi;
+        $st->potensi = $request->potensi;
+        $st->save();
+        return redirect()->route('rule.index');
     }
 
     /**
@@ -58,7 +65,8 @@ class RuleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Rule::findOrFail($id);
+        return view('backend.rule.edit', compact('data'));
     }
 
     /**
@@ -70,7 +78,14 @@ class RuleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $up = Rule::findOrFail($id);
+        $up->ch = $request->ch;
+        $up->hh = $request->hh;
+        $up->abj = $request->abj;
+        $up->hi = $request->hi;
+        $up->potensi = $request->potensi;
+        $up->update();
+        return redirect()->route('rule.index');
     }
 
     /**

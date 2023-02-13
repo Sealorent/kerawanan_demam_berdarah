@@ -4,7 +4,7 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
             <div class="col-md-12">
-                <div class="card mb-4">
+                <div class="card mb-3">
                     <div class="card-header">
                         <div class="div d-flex justify-content-between">
                             <h5 class="card-tittle text-primary">Data Potensi {{ $month." ".$reqyear }}</h5>
@@ -52,34 +52,35 @@
                                     <thead>
                                         <tr>
                                             <th class=" align-middle" rowspan="2">Kecamatan</th>
-                                            <th class="text-center" colspan="2">Fuzzy </th>
-                                            <th class="text-center" colspan="2">GA</th>
-                                            <th class="text-center align-middle"" rowspan=" 2">Opsi</th>
+                                            <th class="text-center" colspan="3">Fuzzy </th>
+                                            <th class="text-center align-middle" rowspan="2">Opsi</th>
+                                            <th class="text-center align-middle" rowspan="2">rule</th>
                                         </tr>
                                         <tr>
-                                            <th class="text-center">Hasil </th>
+                                            <th class=" text-center">Hasil </th>
                                             <th class="text-center">Potensi</th>
-                                            <th class="text-center">Hasil</th>
-                                            <th class="text-center">Potensi</th>
+                                            <th class="text-center">IR</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if (!$data->isEmpty())
                                         @foreach ($data as $item)
                                         @php
-                                        $potensiFuzzy = \App\Models\Rule::select('potensi')->where('id',
-                                        $item[0]['ruleFuzzy'])->pluck('potensi')[0];
-                                        $potensiGa = \App\Models\Rule::select('potensi')->where('id',
-                                        $item[0]['ruleGa'])->pluck('potensi')[0];
-                                        $potensiGa = \App\Models\Rule::select('potensi')->where('id',
-                                        $item[0]['ruleGa'])->pluck('potensi')[0];
+                                        if($item[0]['hasilFuzzy'] <= 20 ){
+                                            $potensiFuzzy = 'rendah';
+                                        }elseif($item[0]['hasilFuzzy'] > 20 and $item[0]['hasilFuzzy'] <= 30 ){
+                                            $potensiFuzzy = 'sedang';
+                                        }else{
+                                            $potensiFuzzy = 'tinggi';
+                                        }
+                                        $kasus = \App\Models\Vektor::select('ir')->where('id',$item[0]['id_vektor'])->pluck('ir')[0];
+                                        $abj = \App\Models\Vektor::select('abj')->where('id', $item[0]['id_vektor'])->pluck('abj')[0];
                                         @endphp
                                         <tr>
                                             <td><strong>{{ $item[0]['nama_kecamatan']}}</strong></td>
-                                            <td class="text-center"><strong>{{ $item[0]['hasilFuzzy']}} %</strong></td>
+                                            <td class="text-center"><strong>{{ $item[0]['hasilFuzzy'] }} %</strong></td>
                                             <td class="text-center"><strong>{{ $potensiFuzzy }}</strong></td>
-                                            <td class="text-center"><strong>{{ $item[0]['hasilGa']}} %</strong></td>
-                                            <td class="text-center"><strong>{{ $potensiGa }}</strong></td>
+                                            <td class="text-center"><strong>{{ $kasus }}</strong></td>
                                             <td class="text-center">
                                                 <a href="{{ route('potensi.edit', $item[0]['id']) }}">
                                                     <button type="button" class="btn btn-primary btn-icon">
@@ -99,6 +100,9 @@
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </form>
+                                            </td>
+                                            <td>{{\App\Models\Rule::select('id','ch',
+                                                'hh','abj','hi','potensi')->where('id',$item[0]['ruleFuzzy'])->first()}}
                                             </td>
                                         </tr>
                                         @endforeach

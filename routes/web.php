@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\FuzzyGaController;
+use App\Http\Controllers\KasusController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\KlimatologiController;
 use App\Http\Controllers\PotensiController;
@@ -31,6 +32,8 @@ Route::get('/ujiGenerasi', [FuzzyGaController::class, 'getUjiGenerasi']);
 Route::get('/filter', [FrontendController::class, 'filter']);
 Route::get('/get-kasus', [DashboardController::class, 'getKasus']);
 Route::get('/getAllPotensi', [DashboardController::class, 'getAllPotensi']);
+Route::get('/updateFuzzy', [FrontendController::class, 'updateFuzzy']);
+
 
 
 
@@ -53,6 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('data-master')->group(function () {
             Route::resource('/kecamatan', KecamatanController::class);
             Route::resource('/rule', RuleController::class);
+            Route::resource('/kasus', KasusController::class);
         });
     });
 });

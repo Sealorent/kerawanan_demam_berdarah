@@ -22,6 +22,7 @@ return new class extends Migration
             $table->float('hi');
             $table->float('abj');
             $table->integer('kasus_dbd');
+            $table->integer('ir');
             $table->integer('triwulan');
             $table->timestamps();
         });

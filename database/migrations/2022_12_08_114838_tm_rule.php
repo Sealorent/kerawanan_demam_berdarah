@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('tm_rule', function (Blueprint $table) {
             $table->id();
-            $table->string('hh');
             $table->string('ch');
+            $table->string('hh');
             $table->string('abj');
             $table->string('hi');
+            $table->string('kelembaban');
+            $table->string('suhu');
             $table->string('potensi');
             $table->timestamps();
         });

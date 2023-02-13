@@ -12,7 +12,7 @@ class TestFuzzy
         $hh = $this->HariHujan($arr['hari_hujan']);
         $abj = $this->AngkaBebasJentik($arr['abj']);
         $hi = $this->HouseIndex($arr['hi']);
-
+        // return array($ch, $hh, $abj, $hi);
         $rule = $this->RuleEvaluation($ch, $hh, $abj, $hi);
         return $rule;
     }
@@ -58,6 +58,47 @@ class TestFuzzy
         return $arr;
     }
 
+    // public function CurahHujan($ch)
+    // {
+    //     $arr = array();
+    //     // Defuzzyfikasi Rendah
+    //     if ($ch <= 0 or $ch >= 200) {
+    //         $arr['rendah'] = 0;
+    //     } elseif ($ch >= 0 and $ch <= 100) {
+    //         $arr['rendah'] = ($ch + 10) / 110;
+    //     } elseif ($ch >= 100 and $ch <= 200) {
+    //         $arr['rendah'] = (200 - $ch) / 100;
+    //     } else {
+    //         return 'null';
+    //     }
+
+    //     // Defuzzyfikasi Sedang
+    //     if ($ch <= 100 or $ch >= 300) {
+    //         $arr['sedang'] = 0;
+    //     } elseif ($ch >= 100 and $ch <= 200) {
+    //         $arr['sedang'] = ($ch - 100) / 100;
+    //     } elseif ($ch >= 200 and $ch <= 300) {
+    //         $arr['sedang'] = (300 - $ch) / 100;
+    //     } else {
+    //         return 'null';
+    //     }
+
+    //     // Defuzzyfikasi Tinggi
+    //     if ($ch <= 300) {
+    //         $arr['tinggi'] = 0;
+    //     } elseif ($ch >= 300 and $ch <= 400) {
+    //         $arr['tinggi'] = ($ch - 300) / 100;
+    //     } elseif ($ch >= 400) {
+    //         $arr['tinggi'] = 1;
+    //     } else {
+    //         return 'null';
+    //     }
+
+    //     return $arr;
+    // }
+
+
+
     public function HariHujan($hh)
     {
         $arr = array();
@@ -73,22 +114,34 @@ class TestFuzzy
         }
 
         // Defuzzyfikasi Sedang
-        if ($hh <= 5 or $hh >= 10) {
+        // if ($hh <= 5 or $hh >= 10) {
+        //     $arr['sedang'] = 0;
+        // } elseif ($hh >= 5 and $hh <= 10) {
+        //     $arr['sedang'] = ($hh - 5) / 5;
+        // } elseif ($hh >= 10 and $hh <= 15) {
+        //     $arr['sedang'] = (15 - $hh) / 5;
+        // } else {
+        //     return 'null';
+        // }
+
+        if ($hh <= 5 or $hh >= 20) {
             $arr['sedang'] = 0;
         } elseif ($hh >= 5 and $hh <= 10) {
             $arr['sedang'] = ($hh - 5) / 5;
         } elseif ($hh >= 10 and $hh <= 15) {
-            $arr['sedang'] = (15 - $hh) / 5;
+            $arr['sedang'] = 1;
+        } elseif ($hh  <= 20) {
+            $arr['sedang'] = (20 - $hh) / 5;
         } else {
             return 'null';
         }
 
         // Defuzzyfikasi Tinggi
-        if ($hh <= 10) {
+        if ($hh <= 15) {
             $arr['tinggi'] = 0;
-        } elseif ($hh >= 10 and $hh <= 15) {
-            $arr['tinggi'] = ($hh - 10) / 5;
-        } elseif ($hh >= 15) {
+        } elseif ($hh >= 15 and $hh <= 20) {
+            $arr['tinggi'] = ($hh - 15) / 5;
+        } elseif ($hh >= 20) {
             $arr['tinggi'] = 1;
         } else {
             return 'null';
@@ -102,32 +155,32 @@ class TestFuzzy
     {
         $arr = array();
         // Defuzzyfikasi Rendah
-        if ($abj >= 50) {
+        if ($abj >= 85) {
             $arr['rendah'] = 0;
-        } elseif ($abj >= 15 and $abj <= 50) {
-            $arr['rendah'] = (50 - $abj) / 35;
-        } elseif ($abj <= 15) {
+        } elseif ($abj >= 80 and $abj <= 85) {
+            $arr['rendah'] = (85 - $abj) / 5;
+        } elseif ($abj <= 85) {
             $arr['rendah'] = 1;
         } else {
             return 'null';
         }
 
         // Defuzzyfikasi Sedang
-        if ($abj <= 30 or $abj >= 70) {
+        if ($abj <= 80 or $abj >= 88) {
             $arr['sedang'] = 0;
-        } elseif ($abj >= 30 and $abj <= 50) {
-            $arr['sedang'] = ($abj - 30) / 20;
-        } elseif ($abj >= 50 and $abj <= 70) {
-            $arr['sedang'] = (70 - $abj) / 20;
+        } elseif ($abj >= 80 and $abj <= 85) {
+            $arr['sedang'] = ($abj - 80) / 5;
+        } elseif ($abj >= 85 and $abj <= 88) {
+            $arr['sedang'] = (88 - $abj) / 5;
         } else {
             return 'null';
         }
 
         // Defuzzyfikasi Tinggi
-        if ($abj <= 50) {
+        if ($abj <= 88) {
             $arr['tinggi'] = 0;
-        } elseif ($abj >= 50 and $abj <= 90) {
-            $arr['tinggi'] = ($abj - 50) / 40;
+        } elseif ($abj >= 88 and $abj <= 90) {
+            $arr['tinggi'] = ($abj - 88) / 5;
         } elseif ($abj >= 90) {
             $arr['tinggi'] = 1;
         } else {
@@ -141,35 +194,33 @@ class TestFuzzy
     {
         $arr = array();
         // Defuzzyfikasi Rendah
-        if ($hi <= 0 or $hi >= 40) {
-            $arr['rendah'] = 1;
-        } elseif ($hi >= 0 and $hi <= 10) {
-            $arr['rendah'] = ($hi - 10) / 10;
-        } elseif ($hi >= 10 and $hi <= 30) {
-            $arr['rendah'] = 1;
-        } elseif ($hi >= 30 and $hi <= 40) {
-            $arr['rendah'] = (40 - $hi) / 10;
+        if ($hi <= 0 or $hi >= 10) {
+            $arr['rendah'] = 0;
+        } elseif ($hi >= 0 and $hi <= 9) {
+            $arr['rendah'] = ($hi + 10) / 19;
+        } elseif ($hi >= 9 and $hi <= 10) {
+            $arr['rendah'] = (10  - $hi) / 1;
         } else {
             return 'null';
         }
 
         // Defuzzyfikasi Sedang
-        if ($hi <= 30 or $hi >= 50) {
+        if ($hi <= 8 or $hi >= 20) {
             $arr['sedang'] = 0;
-        } elseif ($hi >= 20 and $hi <= 40) {
-            $arr['sedang'] = ($hi - 20) / 20;
-        } elseif ($hi >= 40 and $hi <= 60) {
-            $arr['sedang'] = (60 - $hi) / 20;
+        } elseif ($hi >= 8 and $hi <= 10) {
+            $arr['sedang'] = ($hi - 8) / 2;
+        } elseif ($hi >= 10 and $hi <= 20) {
+            $arr['sedang'] = (20 - $hi) / 10;
         } else {
             return 'null';
         }
 
         // Defuzzyfikasi Tinggi
-        if ($hi <= 40) {
+        if ($hi <= 10) {
             $arr['tinggi'] = 0;
-        } elseif ($hi >= 40 and $hi <= 60) {
-            $arr['tinggi'] = ($hi - 40) / 20;
-        } elseif ($hi >= 60) {
+        } elseif ($hi >= 10 and $hi <= 30) {
+            $arr['tinggi'] = ($hi - 10) / 20;
+        } elseif ($hi >= 30) {
             $arr['tinggi'] = 1;
         } else {
             return 'null';
@@ -225,7 +276,7 @@ class TestFuzzy
         $res7 = $a7 * $z7;
 
         // POTENSI SEDANG
-        $rule8 = array($ch['sedang'], $hh['tinggi'], $abj['tinggi'], $hi['rendah']);
+        $rule8 = array($ch['sedang'], $hh['tinggi'], $abj['tinggi'], $hi['sedang']);
         $a8 = min($rule8);
         $z8 = $this->SetZvalue('sedang', $a8);
         $res8 = $a8 * $z8;
@@ -302,18 +353,36 @@ class TestFuzzy
         $z19 = $this->SetZvalue('rendah', $a19);
         $res19 = $a19 * $z19;
 
+        // POTENSI RENDAH
+        $rule20 = array($ch['sedang'], $hh['tinggi'], $abj['sedang'], $hi['sedang']);
+        $a20 = min($rule20);
+        $z20 = $this->SetZvalue('sedang', $a20);
+        $res20 = $a20 * $z20;
+
+        // POTENSI RENDAH
+        $rule21 = array($ch['tinggi'], $hh['tinggi'], $abj['sedang'], $hi['sedang']);
+        $a21 = min($rule21);
+        $z21 = $this->SetZvalue('tinggi', $a21);
+        $res21 = $a21 * $z21;
+
+        $rule22 = array($ch['rendah'], $hh['tinggi'], $abj['rendah'], $hi['tinggi']);
+        $a22 = min($rule22);
+        $z22 = $this->SetZvalue('rendah', $a22);
+        $res22 = $a22 * $z22;
+
+
         // ARRAY OF ALPHA
-        $arrAlpha = array($a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a14, $a15, $a16, $a16, $a17, $a18, $a19);
+        $arrAlpha = array($a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a14, $a15, $a16, $a16, $a17, $a18, $a19, $a20, $a21, $a22);
         // ARRAY OF Z*ALPHA
-        $arrZxAlpha = array($res1, $res2, $res3, $res4, $res5, $res6, $res7, $res8, $res9, $res10, $res11, $res12, $res14, $res15, $res16, $res16, $res17, $res18, $res19);
+        $arrZxAlpha = array($res1, $res2, $res3, $res4, $res5, $res6, $res7, $res8, $res9, $res10, $res11, $res12, $res14, $res15, $res16, $res16, $res17, $res18, $res19, $res20, $res21, $res22);
 
         // SELECT INDEX OF RULE
         $selectRule = array_search(max($arrAlpha), $arrAlpha) + 1;
 
 
-        $ZapredxAlpha = $res1 + $res2 + $res3 + $res4 + $res5 + $res6 + $res7 + $res8 + $res9 + $res10 + $res11 + $res12 + $res14 + $res15 + $res16 + $res16 + $res17 + $res18 + $res19;
-        $SigmaAlpha = $a1 + $a2 + $a3 + $a4 + $a5 + $a6 + $a7 + $a8 + $a9 + $a10 + $a11 + $a12 + $a14 + $a15 + $a16 + $a16 + $a17 + $a18 + $a19;
-        $result = ($ZapredxAlpha / $SigmaAlpha);
+        $ZapredxAlpha = $res1 + $res2 + $res3 + $res4 + $res5 + $res6 + $res7 + $res8 + $res9 + $res10 + $res11 + $res12 + $res14 + $res15 + $res16 + $res16 + $res17 + $res18 + $res19 + $res20 + $res21 + $res22;
+        $SigmaAlpha = $a1 + $a2 + $a3 + $a4 + $a5 + $a6 + $a7 + $a8 + $a9 + $a10 + $a11 + $a12 + $a14 + $a15 + $a16 + $a16 + $a17 + $a18 + $a19 + $a20 + $a21 + $a22;
+        $result = ($ZapredxAlpha / $SigmaAlpha) * 100;
 
         $arrResult = array($result, $selectRule);
         return $arrResult;
@@ -322,7 +391,6 @@ class TestFuzzy
 
     public function SetZvalue($params, $a)
     {
-        // Rendah
         switch ($params) {
             case 'rendah':
                 return 0.3 - ($a * 0.2);

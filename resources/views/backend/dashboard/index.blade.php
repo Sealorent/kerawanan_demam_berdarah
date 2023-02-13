@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-3 col-3 mb-3">
+                {{-- <div class="col-lg-6 col-md-3 col-3 mb-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title d-flex align-items-start justify-content-between">
@@ -51,7 +51,7 @@
                             <span>Generasi Terbaik Algoritma Genetika</span>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
         </div>
@@ -68,7 +68,7 @@
                             <div class="input-group input-group-merge w-25">
                                 <div class="input-group">
                                     <input type="text" id="date_kasus" class="datepicker form-control" name="date_kasus"
-                                        value="{{ old('date_kasus',date('Y')-1) }}" placeholder="Tahun Data Demografi">
+                                        value="{{ old('date_kasus',date('Y')-2) }}" placeholder="Tahun Data Demografi">
                                     <span class="input-group-text" id="text-to-speech-addon">
                                         <i class="fa fa-calendar date_kasus_icon"></i>
                                     </span>
@@ -95,7 +95,7 @@
                                     <div class="input-group">
                                         <input type="text" id="date_kasus_pie" class="datepickerpie form-control"
                                             name="date_kasus_pie"
-                                            value="{{ old('date_kasus',date('Y',strtotime('-1 year'))) }}"
+                                            value="{{ old('date_kasus',date('Y',strtotime('-2 year'))) }}"
                                             placeholder="Tahun Data Demografi">
                                         <span class="input-group-text" id="text-to-speech-addon">
                                             <i class="fa fa-calendar date_kasus_icon_pie"></i>
@@ -142,14 +142,16 @@
             changeYear: true,
             orientation: "bottom",
         });
-        $('.datepickerpie').datepicker({
-            autoclose: true,
-            viewMode: 'years',
-            format: 'yyyy-mm',
-            minViewMode: 1,
-            zIndexOffset : 99999999,
-            orientation: "bottom",
-        });
+        $(".datepickerpie").datepicker(
+    {
+        viewMode: 'years',
+        format: 'yyyy',
+        minViewMode: "years",
+        zIndexOffset : 999,
+        orientation: "bottom",
+        autoclose: true,
+	});
+        
         $('.date_kasus_icon').click(function(){
             $("[name='date_kasus']").focus();
         });

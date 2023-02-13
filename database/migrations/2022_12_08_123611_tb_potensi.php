@@ -23,8 +23,6 @@ return new class extends Migration
             $table->foreign('id_klimatologi')->references('id')->on('tb_klimatologi')->onDelete('cascade');
             $table->unsignedBigInteger('id_fuzzy');
             $table->foreign('id_fuzzy')->references('id')->on('tb_fuzzy');
-            $table->unsignedBigInteger('id_ga');
-            $table->foreign('id_ga')->references('id')->on('tb_ga');
             $table->date('date');
             $table->integer('triwulan');
             $table->timestamps();

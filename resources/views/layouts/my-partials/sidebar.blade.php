@@ -47,7 +47,7 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item  {{ Request::segment(2) == 'data-metode' ? 'active  open' : '' }} ">
+        {{-- <li class="menu-item  {{ Request::segment(2) == 'data-metode' ? 'active  open' : '' }} ">
             <a href="javascript:void(0)" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-box"></i>
                 <div data-i18n="User interface">Data Metode</div>
@@ -59,7 +59,7 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li> --}}
         <li class="menu-item  {{ Request::segment(2) == 'data-master' ? 'active  open' : '' }} ">
             <a href="javascript:void(0)" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-box"></i>
@@ -74,6 +74,11 @@
                 <li class="menu-item {{ Request::segment(3) == 'rule' ? 'active' : '' }}">
                     <a href="{{ route('rule.index') }}" class="menu-link">
                         <div data-i18n="Accordion">Data Rule</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::segment(3) == 'kasus' ? 'active' : '' }}">
+                    <a href="{{ route('kasus.index') }}" class="menu-link">
+                        <div data-i18n="Accordion">Data Kasus</div>
                     </a>
                 </li>
             </ul>

@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function getKasus(Request $request)
     {
         $data = Vektor::select(DB::raw('sum(kasus_dbd) as kasus, triwulan'))->whereYear('date', $request->tahun)->groupBy('triwulan')->get();
-
+        // return $data;
         $map = $data->map(function ($item, $key) {
             return [
                 'jumlah_kasus' => $item->kasus,
@@ -37,11 +37,11 @@ class DashboardController extends Controller
         $data = Potensi::select(DB::raw('count(potensi) as jumlah, potensi'))
             ->whereYear('date', $request->tahun)
             ->where('triwulan', $request->triwulan)
-            ->join('tb_ga', 'tb_ga.id', 'tb_potensi.id_ga')
-            ->join('tm_rule', 'tm_rule.id', 'tb_ga.id_rule')
+            ->join('tb_fuzzy', 'tb_fuzzy.id', 'tb_potensi.id_fuzzy')
+            ->join('tm_rule', 'tm_rule.id', 'tb_fuzzy.id_rule')
             ->groupBy('potensi')
             ->get();
-
+        // return $data;
         for ($i = 0; $i < count($data); $i++) {
             $arr['potensi'][] = $data[$i]['potensi'];
             $arr['jumlah'][] = $data[$i]['jumlah'];
