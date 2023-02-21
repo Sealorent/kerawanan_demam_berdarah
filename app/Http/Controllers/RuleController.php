@@ -14,7 +14,7 @@ class RuleController extends Controller
      */
     public function index()
     {
-        $data = Rule::orderBy('ch')->paginate(18);
+        $data = Rule::paginate(18);
         return view('backend.rule.index', compact('data'));
     }
 
@@ -40,7 +40,8 @@ class RuleController extends Controller
         $st->ch = $request->ch;
         $st->hh = $request->hh;
         $st->abj = $request->abj;
-        $st->hi = $request->hi;
+        $st->suhu = $request->suhu;
+        $st->kelembaban = $request->kelembaban;
         $st->potensi = $request->potensi;
         $st->save();
         return redirect()->route('rule.index');
@@ -82,7 +83,8 @@ class RuleController extends Controller
         $up->ch = $request->ch;
         $up->hh = $request->hh;
         $up->abj = $request->abj;
-        $up->hi = $request->hi;
+        $up->suhu = $request->suhu;
+        $up->kelembaban = $request->kelembaban;
         $up->potensi = $request->potensi;
         $up->update();
         return redirect()->route('rule.index');
@@ -96,6 +98,8 @@ class RuleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $up = Rule::findOrFail($id);
+        $up->delete();
+        return redirect()->route('rule.index');
     }
 }

@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tb_detail_kasus', function (Blueprint $table) {
+        Schema::create('tb_tindakan', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_kasus');
-            $table->foreign('id_kasus')->references('id')->on('tb_kasus')->onDelete('cascade');
-            $table->string('nama_penderita');
-            $table->float('longitude');
-            $table->float('latitude');
+            $table->enum('potensi',['rendah','sedang','tinggi']);
+            $table->longText('tindakan');
             $table->timestamps();
         });
     }
@@ -31,7 +28,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('tb_detail_kasus', function (Blueprint $table) {
+        Schema::table('tb_tindakan', function (Blueprint $table) {
             //
         });
     }

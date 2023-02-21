@@ -47,14 +47,16 @@
                     <!-- Account -->
                     <div class="card-body p-0">
                         <div class="card-body">
+                            <p>Persentase Algoritma : {{ $presentase }} %</p>
                             <div class="table-responsive text-nowrap">
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
+                                            <th class=" align-middle" rowspan="2" >#</th>
                                             <th class=" align-middle" rowspan="2">Kecamatan</th>
                                             <th class="text-center" colspan="3">Fuzzy </th>
                                             <th class="text-center align-middle" rowspan="2">Opsi</th>
-                                            <th class="text-center align-middle" rowspan="2">rule</th>
+                                            <!-- <th class="text-center align-middle" rowspan="2">rule</th> -->
                                         </tr>
                                         <tr>
                                             <th class=" text-center">Hasil </th>
@@ -77,6 +79,8 @@
                                         $abj = \App\Models\Vektor::select('abj')->where('id', $item[0]['id_vektor'])->pluck('abj')[0];
                                         @endphp
                                         <tr>
+                                            <td><strong>{{ $loop->iteration }}</strong></td>
+
                                             <td><strong>{{ $item[0]['nama_kecamatan']}}</strong></td>
                                             <td class="text-center"><strong>{{ $item[0]['hasilFuzzy'] }} %</strong></td>
                                             <td class="text-center"><strong>{{ $potensiFuzzy }}</strong></td>
@@ -101,9 +105,9 @@
                                                     </button>
                                                 </form>
                                             </td>
-                                            <td>{{\App\Models\Rule::select('id','ch',
+                                            <!-- <td>{{\App\Models\Rule::select('id','ch',
                                                 'hh','abj','hi','potensi')->where('id',$item[0]['ruleFuzzy'])->first()}}
-                                            </td>
+                                            </td> -->
                                         </tr>
                                         @endforeach
                                         @else

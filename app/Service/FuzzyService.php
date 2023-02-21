@@ -123,10 +123,10 @@ class FuzzyService
         } 
 
         // Defuzzyfikasi Tinggi
-        if ($abj <= 70) {
+        if ($abj <= 78) {
             $arr['tinggi'] = 0;
-        } elseif ($abj >= 70 and $abj <= 95) {
-            $arr['tinggi'] = ($abj - 70) / 15;
+        } elseif ($abj >= 78 and $abj <= 95) {
+            $arr['tinggi'] = ($abj - 78) / 17;
         } elseif ($abj >= 95) {
             $arr['tinggi'] = 1;
         } 

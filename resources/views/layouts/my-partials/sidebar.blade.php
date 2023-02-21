@@ -81,7 +81,18 @@
                         <div data-i18n="Accordion">Data Kasus</div>
                     </a>
                 </li>
+                <li class="menu-item {{ Request::segment(3) == 'tindakan' ? 'active' : '' }}">
+                    <a href="{{ route('tindakan.index') }}" class="menu-link">
+                        <div data-i18n="Accordion">Data Tindakan</div>
+                    </a>
+                </li>
             </ul>
+        </li>
+        <li class="menu-item {{ Request::segment(2) == 'metode' ? 'active' : '' }}">
+            <a href="{{ route('metode') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Informasi Metode</div>
+            </a>
         </li>
     </ul>
 </aside>

@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 order-1">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-3 mb-3">
+                <div class="col-lg-6 col-md-3 col-3 mb-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title d-flex align-items-start justify-content-between">
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-3 mb-3">
+                <div class="col-lg-6 col-md-3 col-3 mb-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title d-flex align-items-start justify-content-between">
@@ -26,7 +26,7 @@
                                     <img src="../assets/img/icons/unicons/wallet-info.png" alt="Credit Card"
                                         class="rounded" />
                                 </div>
-                                <h1 class="mb-0">{{ App\Models\Vektor::sum('kasus_dbd') }}</h1>
+                                <h1 class="mb-0">{{ App\Models\Kasus::sum('total_kasus') }}</h1>
                             </div>
                             <span>Total Kasus</span>
                             {{-- @php
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-lg-6 col-md-3 col-3 mb-3">
+                {{-- <div class="col-lg-6 col-md-6 col-3 mb-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title d-flex align-items-start justify-content-between">
@@ -219,6 +219,15 @@
                         ]
                     },
                     options: {
+                        scales: {
+                                    y: {
+                                        // type: 'linear' as const, // magic
+                                        ticks: {
+                                            precision: 0,
+                                            stepSize: 1,
+                                        },
+                                    },
+                                },
                         plugins: {
                             legend: {
                                 display: true,
@@ -268,7 +277,7 @@
                         data: {
                         labels: result['potensi'],
                         datasets: [{
-                            label: '# of Votes',
+                            // label: '# of Votes',
                             data: result['jumlah'],
                             borderWidth: 1
                         }]
@@ -276,7 +285,6 @@
                         options: {
                             scales: {
                                     y: {
-                                        // type: 'linear' as const, // magic
                                         ticks: {
                                             precision: 0,
                                             stepSize: 1,

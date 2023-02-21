@@ -87,11 +87,13 @@ class KasusController extends Controller
                 'kecamatan' => 'Kecamatan',
                 'date' => 'Bulan & Tahun',
             ]);
+
             try {
                 $kasus = new Kasus();
                 $kasus->id_kecamatan = $request->kecamatan;
                 $kasus->date = date('Y-m-d', strtotime("01-" . $request->date));
                 $kasus->total_kasus = $request->total_kasus;
+                $kasus->triwulan = $this->checkTriwulan(explode('-', $request->date)[0]);
                 $kasus->save();
 
                 foreach ($request->nama as $key => $value) {
@@ -151,12 +153,13 @@ class KasusController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $kasus = Kasus::find($id);
-            foreach ($request->id as $key => $value) {
-                $detailKasus = DetailKasus::find($id);
-                $detailKasus->nama_penderita = $request->nama[$key];
-                $detailKasus->longitude = $request->longitude[$key];
-                $detailKasus->latitude = $request->latitude[$key];
+            // $kasus = Kasus::find($id);
+            for ($i=0; $i < count($request->id) ; $i++) { 
+                $detailKasus = DetailKasus::find($request->id[$i]);
+                $detailKasus->id_kasus = $id;
+                $detailKasus->nama_penderita = $request->nama[$i];
+                $detailKasus->longitude = (double)$request->longitude[$i];
+                $detailKasus->latitude = (double)$request->latitude[$i];
                 $detailKasus->update();
             }
             return redirect()->back()->with('success', "Data Berhasil Dirubah");
@@ -188,6 +191,20 @@ class KasusController extends Controller
             return redirect()->back()->withError($e->getMessage());
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withError($e->getMessage());
+        }
+    }
+
+    public function checkTriwulan($month)
+    {
+        if($month == '01' or $month == '02' or $month == '03'){
+            return 1;
+        }elseif($month == '04' or $month == '05' or $month == '06'){
+            return 2;
+
+        }elseif($month == '07' or $month == '08' or $month == '09'){
+            return 3;
+        }elseif($month == '10' or $month == '11' or $month == '12'){
+            return 4;
         }
     }
 }

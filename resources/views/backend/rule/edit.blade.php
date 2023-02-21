@@ -60,10 +60,20 @@
                                     @enderror
                                 </div>
                                 <div class="form-group mb-3 col-md-3">
-                                    <label for="ch" class="form-label">hi <span id="required">*</span></label>
-                                    <input type="text" class="form-control  @error('hi') is-invalid @enderror" name="hi"
-                                        value="{{ old('hi', $data->hi) }}" placeholder="Masukkan  hi">
-                                    @error('hi')
+                                    <label for="ch" class="form-label">suhu <span id="required">*</span></label>
+                                    <input type="text" class="form-control  @error('suhu') is-invalid @enderror" name="suhu"
+                                        value="{{ old('suhu',$data->suhu) }}" placeholder="Masukkan  suhu">
+                                    @error('suhu')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group mb-3 col-md-3">
+                                    <label for="ch" class="form-label">kelembaban <span id="required">*</span></label>
+                                    <input type="text" class="form-control  @error('kelembaban') is-invalid @enderror" name="kelembaban"
+                                        value="{{ old('kelembaban',$data->kelembaban) }}" placeholder="Masukkan  kelembaban">
+                                    @error('kelembaban')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

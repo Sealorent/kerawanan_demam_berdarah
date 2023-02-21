@@ -42,7 +42,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header">
                         <div class="d-flex align-items-start justify-content-between">
-                            <h5 class="card-title text-primary">Tambah Data Kasus</h5>
+                            <h5 class="card-title text-primary">Edit Data Kasus</h5>
                         </div>
                         <hr class="my-0" />
                     </div>
@@ -131,10 +131,10 @@
                                     <div class="form-group mb-3 col-md-3">
                                         <label class="form-label" for="temperatur">Longitude <span
                                                 id="required">*</span></label>
-                                        <input type="number"
+                                        <input type="text"
                                             class="form-control  @error('longitude[]') is-invalid @enderror"
                                             name="longitude[]" value="{{ $item->longitude }}"
-                                            placeholder="Masukkan nilai Longitude">
+                                            placeholder="Masukkan nilai Longitude" step="0">
                                         @error('longitude[]')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -144,7 +144,7 @@
                                     <div class="form-group mb-3 col-md-3">
                                         <label class="form-label" for="kelembaban">Latitude<span
                                                 id="required">*</span></label>
-                                        <input type="number"
+                                        <input type="text"
                                             class="form-control  @error('latitude[]') is-invalid @enderror"
                                             name="latitude[]" value="{{ $item->latitude }}"
                                             placeholder="Masukkan nilai Latitude">

@@ -288,6 +288,8 @@
                 return 'white';
         }
 
+        var style2 = {fillColor:'red',color: 'black',weight:2,fillOpacity:0.8}
+
         function getColorPotensi(param) {
             return {
                 weight: 1,
@@ -317,7 +319,9 @@
             return result;
         }
 
-
+        map.on('click', function(e) {
+            alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+        });
         //legend
         var potensi = null;
         function getPotensi (result) {
@@ -354,7 +358,6 @@
                             if (res.kecamatan == feature.properties.kecamatan) {
                                 layer.bindPopup( `<p style="font-weight: bold;"> `+feature.properties.kecamatan +`</p><p> Potensi `+ res.potensi +`</p><p> Bulan: `+ res.triwulan +`</p><p> Jumlah Kasus DBD: `+ res.kasus_dbd +`</p>`).addTo(potensi);
                                 var bounds = layer.getBounds();
-                                
                                 layer.setStyle(getColorPotensi(res.potensi));
                                 
                                 let coordsLayer = L.geoJSON(feature.geometry.coordinates).addTo(map);
@@ -365,49 +368,49 @@
                                 2,
                                 options
                                 );
-                                L.geoJSON(squareGrid).addTo(potensi);  
-                                // for (let i = 0; i < squareGrid.features.length; i++) {
-                                //     squareGrid.features[i].properties.highlighted = 'No';
-                                //     squareGrid.features[i].properties.id = i;
-                                // }
+
+                                if(res.arr_kasus.longlat != undefined){
+                                    for (let a = 0; a < res.arr_kasus.longlat.length ; a++) {
+                                        for (let i = 0; i < squareGrid.features.length; i++) {
+                                            var points = turf.point(res.arr_kasus.longlat[a]);
+                                            L.geoJSON(points,{
+                                                onEachFeature: function(feature2, layer2){
+                                                    // console.log(feature2.geometry.coordinates);
+                                                    L.geoJSON(squareGrid.features[i],{
+                                                        onEachFeature:function(feature3, layer3){
+                                                            // console.log(feature3);
+                                                            if (turf.inside([113.34668650309413, -8.397199850439213], feature3)){
+                                                                // feature3.properties.highlighted = 'Yes';
+                                                                layer3.setStyle({fillColor:'red'}).addTo(potensi);
+
+                                                                // feature3.properties.highlighted = i;
+                                                                // console.log(feature2.geometry.coordinates);
+                                                            }else{
+                                                                layer3.setStyle({fillColor:'green'}).addTo(potensi);
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                            // if (turf.inside(res.arr_kasus.longlat[a], squareGrid.features)){
+                                            // }
+                                        }  
+                                    }
+                                }
+                                // penyebaran = L.geoJSON(squareGrid).addTo(map);  
+                                // controlLayers.addOverlay(penyebaran, 'Penyebaran');
+                                // L.geoJSON(squareGrid.features.length,{
+                                //     onEachFeature:function(feature, layer){
+                                //         // console.log(feature);
+                                //         layer.setStyle({fillColor:'red'});
+                                //     }
+                                // }).addTo(potensi);
+
+                                // console.log(res.arr_kasus.longlat);
+                                // console.log(squareGrid);
+                                // 
                                 // console.log(squareGrid.features);
                                 // console.log(`squareGrid - after:`, squareGrid);
-
-                                // potensi.current.on('load', () => {
-                                // console.log(`-- Loaded --`);
-                                //     potensi.current.addSource('grid-source', {
-                                //         'type': "geojson",
-                                //         'data': squareGrid,
-                                //         'generateId': true
-                                //     });
-                                //     potensi.current.addLayer(
-                                //         {
-                                //         'id': 'grid-layer',
-                                //         'type': 'fill',
-                                //         'source': 'grid-source',
-                                //         'paint': {
-                                //             'fill-outline-color': 'rgba(0,0,0,0.1)',
-                                //             'fill-color': 'rgba(0,0,0,0.1)'
-                                //         }
-                                //         }
-                                //     );
-                                //     potensi.current.addLayer(
-                                //         {
-                                //         'id': 'grid-layer-highlighted',
-                                //         'type': 'fill',
-                                //         'source': 'grid-source',
-                                //         'paint': {
-                                //             'fill-outline-color': '#484896',
-                                //             'fill-color': '#6e599f',
-                                //             'fill-opacity': 0.75
-                                //         },
-                                //         //'filter': ['==', ['get', 'highlighted'], 'Yes']
-                                //         'filter': ['==', ['get', 'id'], -1]
-                                //         }
-                                //     );
-                                // });
-                                
-                                
 
                                 
                                 // var points = turf.randomPoint(res.jumlahRumahPositif, {bbox:turf.bbox(feature) });
@@ -451,7 +454,12 @@
                     triwulan: $('#triwulan').val(),
                 },
                 }).done(function (result) {
-                    getPotensi(result);
+                    if(result.length === 0){
+                        alert('data masih belum tersedia');
+                        $("#spinner").attr("hidden",true);
+                    }else{
+                        getPotensi(result);
+                    }
                 });
             }
         });

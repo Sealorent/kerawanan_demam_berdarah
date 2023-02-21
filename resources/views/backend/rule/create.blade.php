@@ -19,7 +19,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header">
                         <div class="d-flex align-items-start justify-content-between">
-                            <h5 class="card-title text-primary">Tambah Kecamatan</h5>
+                            <h5 class="card-title text-primary">Tambah Rule</h5>
                         </div>
                         <hr class="my-0" />
                     </div>
@@ -58,11 +58,31 @@
                                     </div>
                                     @enderror
                                 </div>
-                                <div class="form-group mb-3 col-md-3">
+                                <!-- <div class="form-group mb-3 col-md-3">
                                     <label for="ch" class="form-label">hi <span id="required">*</span></label>
                                     <input type="text" class="form-control  @error('hi') is-invalid @enderror" name="hi"
                                         value="{{ old('hi') }}" placeholder="Masukkan  hi">
                                     @error('hi')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div> -->
+                                <div class="form-group mb-3 col-md-3">
+                                    <label for="ch" class="form-label">suhu <span id="required">*</span></label>
+                                    <input type="text" class="form-control  @error('suhu') is-invalid @enderror" name="suhu"
+                                        value="{{ old('suhu') }}" placeholder="Masukkan  suhu">
+                                    @error('suhu')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group mb-3 col-md-3">
+                                    <label for="ch" class="form-label">kelembaban <span id="required">*</span></label>
+                                    <input type="text" class="form-control  @error('kelembaban') is-invalid @enderror" name="kelembaban"
+                                        value="{{ old('kelembaban') }}" placeholder="Masukkan  kelembaban">
+                                    @error('kelembaban')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
