@@ -42,7 +42,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header">
                         <div class="d-flex align-items-start justify-content-between">
-                            <h5 class="card-title text-primary">Tambah Data Klimatologi </h5>
+                            <h5 class="card-title text-primary">Tambah Data Potensi</h5>
                         </div>
                         <hr class="my-0" />
                     </div>

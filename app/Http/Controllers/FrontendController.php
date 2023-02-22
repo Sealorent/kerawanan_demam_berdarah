@@ -113,15 +113,6 @@ class FrontendController extends Controller
             ->join('tb_klimatologi', 'tb_potensi.id_klimatologi', 'tb_klimatologi.id')
             ->get();
 
-        return  DB::table('tb_potensi')
-           ->select('tb_potensi.potensi_ir','tb_fuzzy.potensi')
-           // ->selectRaw('count(tb_fuzzy.potensi) as potensi')
-           ->join('tb_fuzzy', 'tb_fuzzy.id', '=', 'tb_potensi.id')
-        //    ->where('tb_fuzzy.is_valid','tb_fuzzy.potensi')
-           ->where('tb_potensi.triwulan','=', 1)
-           ->whereYear('tb_potensi.date','=',2021)
-           ->get();
-
         for ($i = 0; $i < count($data); $i++) {
             $fuzzy = Fuzzy::find($data[$i]['id']);
             $fuzzy->nilai = $this->fuzzyService->Fuzzy($data[$i])[0];
@@ -141,6 +132,7 @@ class FrontendController extends Controller
             'tb_fuzzy.nilai as hasilFuzzy',
             'tb_fuzzy.id_rule as ruleFuzzy',
             'tb_fuzzy.potensi as potensi',
+            'tb_vektor.ir as ir',
             'tb_vektor.rumah_positif as jumlahRumahPositif',
         )
             ->join('tm_kecamatan', 'tm_kecamatan.id', 'tb_potensi.id_kecamatan')
@@ -149,6 +141,7 @@ class FrontendController extends Controller
             ->where('tb_potensi.triwulan', $request->triwulan)
             ->whereYear('tb_potensi.date', $request->date)
             ->get();
+
         $map = $dataKli->map(function ($item, $key) {
             return [
                 'potensi' => $this->getPotensi($item->hasilFuzzy),

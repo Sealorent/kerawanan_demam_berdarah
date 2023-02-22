@@ -322,6 +322,8 @@
         map.on('click', function(e) {
             alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
         });
+
+
         //legend
         var potensi = null;
         function getPotensi (result) {
@@ -345,6 +347,8 @@
             };
             legend.addTo(map);
 
+            const rand = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
             $.ajax({
             dataType: "json",
             url: geoJsonUrl,
@@ -355,48 +359,60 @@
                 onEachFeature: function (feature, layer) {
                     result.forEach(res => {
                             // layer.bindPopup( `<p style=font-weight:bold;> `+feature.properties.kecamatan +`</p>`).addTo(potensi);
+                            // console.log(rand(0,7));
                             if (res.kecamatan == feature.properties.kecamatan) {
                                 layer.bindPopup( `<p style="font-weight: bold;"> `+feature.properties.kecamatan +`</p><p> Potensi `+ res.potensi +`</p><p> Bulan: `+ res.triwulan +`</p><p> Jumlah Kasus DBD: `+ res.kasus_dbd +`</p>`).addTo(potensi);
                                 var bounds = layer.getBounds();
                                 layer.setStyle(getColorPotensi(res.potensi));
                                 
-                                let coordsLayer = L.geoJSON(feature.geometry.coordinates).addTo(map);
-                                let bbox = turf.bbox(feature);
-                                let options = { units: "kilometers"};
-                                let squareGrid = turf.squareGrid(
-                                bbox,
-                                2,
-                                options
-                                );
 
-                                if(res.arr_kasus.longlat != undefined){
-                                    for (let a = 0; a < res.arr_kasus.longlat.length ; a++) {
-                                        for (let i = 0; i < squareGrid.features.length; i++) {
-                                            var points = turf.point(res.arr_kasus.longlat[a]);
-                                            L.geoJSON(points,{
-                                                onEachFeature: function(feature2, layer2){
-                                                    // console.log(feature2.geometry.coordinates);
-                                                    L.geoJSON(squareGrid.features[i],{
-                                                        onEachFeature:function(feature3, layer3){
-                                                            // console.log(feature3);
-                                                            if (turf.inside([113.34668650309413, -8.397199850439213], feature3)){
-                                                                // feature3.properties.highlighted = 'Yes';
-                                                                layer3.setStyle({fillColor:'red'}).addTo(potensi);
+                                // Cellular Automata Perkecamatan
+                                // let coordsLayer = L.geoJSON(feature.geometry.coordinates).addTo(map);
+                                // let bbox = turf.bbox(feature);
+                                // let options = { units: "kilometers"};
+                                // let squareGrid = turf.squareGrid(
+                                // bbox,
+                                // 2,
+                                // options
+                                // );
 
-                                                                // feature3.properties.highlighted = i;
-                                                                // console.log(feature2.geometry.coordinates);
-                                                            }else{
-                                                                layer3.setStyle({fillColor:'green'}).addTo(potensi);
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            })
-                                            // if (turf.inside(res.arr_kasus.longlat[a], squareGrid.features)){
-                                            // }
-                                        }  
-                                    }
-                                }
+                                // if(res.arr_kasus.longlat != undefined){
+                                //     for (let a = 0; a < res.arr_kasus.longlat.length ; a++) {
+                                //         for (let i = 0; i < squareGrid.features.length; i++) {
+                                           
+
+                                //             var points = turf.point(res.arr_kasus.longlat[a]);
+                                           
+                                //             console.log(squareGrid.features[1]);                                                
+                                //             // for (let index = 0; index < squareGrid.features.length; index++) {
+                                //             // }
+                                            
+                                //             L.geoJSON(points,{
+                                //                 onEachFeature: function(feature2, layer2){
+                                //                     L.geoJSON(squareGrid.features[i],{
+                                //                         onEachFeature:function(feature3, layer3){
+                                //                             feature3.properties.ij = i;
+                                //                             // Densitas untuk state sembuh
+                                //                             feature3.properties.state = Math.random() < 0.6 ? 1 : 0;
+
+                                //                             if (turf.inside([113.34668650309413, -8.397199850439213], feature3)){
+                                //                                 layer3.setStyle({fillColor:'red'}).addTo(map);
+                                //                                 // State Sakit
+                                //                                 feature3.properties.state = 2;
+                                //                             }else{
+                                //                                 layer3.setStyle({fillColor:'green'}).addTo(map);
+                                //                             }
+
+                                //                         }
+                                //                     });
+                                //                 }
+                                //             })
+                                //             // if (turf.inside(res.arr_kasus.longlat[a], squareGrid.features)){
+                                //             // }
+                                //             // console.log(squareGrid.features);
+                                //         }  
+                                //     }
+                                // }
                                 // penyebaran = L.geoJSON(squareGrid).addTo(map);  
                                 // controlLayers.addOverlay(penyebaran, 'Penyebaran');
                                 // L.geoJSON(squareGrid.features.length,{
@@ -409,7 +425,6 @@
                                 // console.log(res.arr_kasus.longlat);
                                 // console.log(squareGrid);
                                 // 
-                                // console.log(squareGrid.features);
                                 // console.log(`squareGrid - after:`, squareGrid);
 
                                 

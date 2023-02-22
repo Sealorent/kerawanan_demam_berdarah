@@ -7,10 +7,16 @@
     </div>
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        {{-- {{ env('APP_NAME') }} --}}
         <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <form action="{{ route('logout') }}" method="post">
+                    @csrf
+                    <button class="dropdown-item btn-danger btn-info" type="submit">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                    </button>
+                </form>
             <!-- User -->
-            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+            <!-- <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
@@ -32,7 +38,7 @@
                         </form>
                     </li>
                 </ul>
-            </li>
+            </li> -->
             <!--/ User -->
         </ul>
     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kasus;
 use App\Models\Potensi;
+use App\Models\Rule;
 use App\Models\Vektor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,8 @@ class DashboardController extends Controller
 
     public function metode()
     {
-        return view('backend.metode.index');
+        $rule = Rule::all();
+        return view('backend.metode.index',compact('rule'));
     }
 
     public function getKasus(Request $request)

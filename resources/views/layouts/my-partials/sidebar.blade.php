@@ -11,17 +11,18 @@
             <i class="bx bx-chevron-left bx-sm align-middle"></i>
         </a>
     </div>
-
+    <hr>
+    
     <div class="menu-inner-shadow"></div>
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
         <li class="menu-item {{ Request::segment(2) == 'dashboard' ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <i class="menu-icon tf-icons fa fa-home"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-        <li class="menu-item  {{ Request::segment(2) == 'data-potensi' ? 'active  open' : '' }} ">
+        <!-- <li class="menu-item  {{ Request::segment(2) == 'data-potensi' ? 'active  open' : '' }} ">
             <a href="javascript:void(0)" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-box"></i>
                 <div data-i18n="User interface">Data Potensi</div>
@@ -87,10 +88,29 @@
                     </a>
                 </li>
             </ul>
+        </li> -->
+        
+        <li class="menu-item {{ Request::segment(3) == 'potensi' ? 'active' : '' }}">
+            <a href="{{ route('potensi.index') }}" class="menu-link">
+                <i class="menu-icon fa fa-pie-chart"></i>
+                <div data-i18n="Analytics">Data Potensi</div>
+            </a>
+        </li>
+        <li class="menu-item {{ Request::segment(3) == 'kasus' ? 'active' : '' }}">
+            <a href="{{ route('kasus.index') }}" class="menu-link">
+                <i class="menu-icon fa fa-users"></i>
+                <div data-i18n="Analytics">Data Kasus</div>
+            </a>
+        </li>
+        <li class="menu-item {{ Request::segment(3) == 'tindakan' ? 'active' : '' }}">
+            <a href="{{ route('tindakan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons fa fa-ambulance"></i>
+                <div data-i18n="Analytics">Data Tindakan</div>
+            </a>
         </li>
         <li class="menu-item {{ Request::segment(2) == 'metode' ? 'active' : '' }}">
             <a href="{{ route('metode') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <i class="menu-icon tf-icons fa fa-tasks"></i>
                 <div data-i18n="Analytics">Informasi Metode</div>
             </a>
         </li>

@@ -42,7 +42,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header">
                         <div class="d-flex align-items-start justify-content-between">
-                            <h5 class="card-title text-primary">Tambah Data Klimatologi </h5>
+                            <h5 class="card-title text-primary">Detail Data Potensi </h5>
                         </div>
                         <hr class="my-0" />
                     </div>
@@ -135,6 +135,32 @@
                                     </div>
                                     @enderror
                                 </div>
+                                <div class="form-group mb-3 col-md-6">
+                                    <label class="form-label" for="temperatur">Suhu<small>(°C)</small> <span
+                                            id="required">*</span></label>
+                                    <input type="number" step="0.01"
+                                        class="form-control  @error('suhu') is-invalid @enderror"
+                                        name="suhu" value="{{ old('suhu',$klimatologi->suhu)    }}"
+                                        placeholder="Masukkan Rata-rata Suhu" min="0" readonly>
+                                    @error('suhu')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group mb-3 col-md-6">
+                                    <label class="form-label" for="kelembaban">Kelembaban <small>(%)</small> <span
+                                            id="required">*</span></label>
+                                    <input type="number" step="0.01"
+                                        class="form-control  @error('kelembaban') is-invalid @enderror"
+                                        name="kelembaban" value="{{  old('kelembaban',$klimatologi->kelembaban) }}"
+                                        placeholder="Masukkan Rata-rata Kelembaban" min="0" readonly>
+                                    @error('kelembaban')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div> 
                                 <div class="form-group mb-3 col-md-6">
                                     <label class="form-label" for="curah_hujan">Curah Hujan</label>
                                     <small>(mm)</small>
@@ -230,30 +256,192 @@
                                     </div>
                                     @enderror
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="d-flex justify-content-start">
-                                    <p class="p-1">CH : {{ $rule->ch }}</p>
-                                    <p class="p-1">HH : {{ $rule->hh }}</p>
-                                    <p class="p-1">ABJ : {{ $rule->abj }}</p>
-                                    <p class="p-1">HI : {{ $rule->hi }}</p>
+                                <div class="form-group mb-3 col-md-6">
+                                    <label class="form-label" for="kasus_dbd">Incident Rate</label>
+                                    <span id="required">*</span>
+                                    <input type="number" class="form-control @error('ir') is-invalid @enderror"
+                                        name="ir" value="{{ old('ir',$vektor->ir) }}"
+                                        placeholder="Masukkan Incident Rate" min="0" readonly>
+                                    @error('ir')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
                                 </div>
-
                             </div>
                             <div class="mt-5 ">
-                                <div class="d-flex justify-content-end">
-                                    <a class="btn btn-outline-primary"
-                                        href="{{ route('potensi.edit',$data->id) }}">Edit</a>
-                                    <a class="btn btn-primary btn-outline-secondary"
-                                        href="{{ route('potensi.index') }}">Kembali</a>
+                                <div class="d-flex justify-content-end ">
+                                    <a class="btn btn-primary btn-outline-primary m-2" href="{{ route('potensi.edit',$data->id) }}">Edit</a>
+                                    <a class="btn btn-primary btn-outline-secondary m-2" href="{{ route('potensi.index') }}">Kembali</a>
                                 </div>
                             </div>
                         </form>
-                        {{-- <div id="map"></div> --}}
-
                     </div>
 
                 </div>
+                <!-- /Account -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <h5 class="card-title text-primary"> Perhitungan Fuzzy </h5>
+                        </div>
+                        <hr class="my-0" />
+                    </div>
+                    <div class="card-body">
+                        @php
+                        $ch = explode(",",$fuzzyfikasi->curah_hujan);
+                        $hh = explode(",",$fuzzyfikasi->hari_hujan);
+                        $abj = explode(",",$fuzzyfikasi->abj);
+                        $suhu = explode(",",$fuzzyfikasi->suhu);
+                        $kelembaban = explode(",",$fuzzyfikasi->kelembaban);
+                        $implikasi = explode(",",$fuzzy->implikasi);
+                        @endphp
+                        <div class="row">
+                            <div class=" mb-3 col-md-3">
+                                <table class="table table-bordered">
+                                <p>Curah Hujan</p>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tingkat</th>
+                                            <th scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Rendah</th>
+                                            <td>{{ $ch[0] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sedang</th>
+                                            <td>{{ $ch[1] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">TInggi</th>
+                                            <td >{{ $ch[2] }}</td>
+                                        </tr>
+                                    </tbody>
+                                    </table>
+                            </div>
+                            <div class=" mb-3 col-md-3">
+                                <table class="table table-bordered">
+                                <p>Hari Hujan</p>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tingkat</th>
+                                            <th scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Rendah</th>
+                                            <td>{{ $hh[0] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sedang</th>
+                                            <td>{{ $hh[1] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">TInggi</th>
+                                            <td >{{ $hh[2] }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class=" mb-3 col-md-3">
+                                <table class="table table-bordered">
+                                <p>Angka Bebas Jentik</p>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tingkat</th>
+                                            <th scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Rendah</th>
+                                            <td>{{ $abj[0] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sedang</th>
+                                            <td>{{ $abj[1] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">TInggi</th>
+                                            <td >{{ $abj[2] }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class=" mb-3 col-md-3">
+                                <table class="table table-bordered">
+                                <p>Suhu</p>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tingkat</th>
+                                            <th scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Rendah</th>
+                                            <td>{{ $suhu[0] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sedang</th>
+                                            <td>{{ $suhu[1] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">TInggi</th>
+                                            <td >{{ $suhu[2] }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class=" mb-3 col-md-3">
+                                <table class="table table-bordered">
+                                <p>Kelembaban</p>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tingkat</th>
+                                            <th scope="col">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Rendah</th>
+                                            <td>{{ $kelembaban[0] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sedang</th>
+                                            <td>{{ $kelembaban[1] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">TInggi</th>
+                                            <td >{{ $kelembaban[2] }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <h4 class="card-title text-primary mt-4">Implikasi</h4>
+                        <hr>
+                        <div class="row col-4">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                    @foreach($implikasi as $item)
+                                        <tr>
+                                            <th class="text-center">R{{ $loop->iteration }}</th>
+                                            <td  class="text-center">{{ $item }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                        </div>  
+                    </div>
                 <!-- /Account -->
             </div>
         </div>
@@ -261,7 +449,6 @@
 </div>
 @endsection
 
-{{-- Set Year Javascript --}}
 @push('extraJS')
 <script>
     $(document).ready(function() {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fuzzy;
+use App\Models\Fuzzyfikasi;
 use App\Models\GA;
 use App\Models\Kecamatan;
 use App\Models\Klimatologi;
@@ -201,27 +202,26 @@ class PotensiController extends Controller
      */
     public function store(Request $request)
     {
-
-        $fuzzy = $this->fuzzyService->Fuzzy($request);
-        $nilaiFuzzy = $fuzzy[0];
-        $idRuleFuzzy = $fuzzy[1];
-
-
-        $cek = Klimatologi::select('tb_klimatologi.id_kecamatan', 'tb_klimatologi.created_at')
-            ->where('tb_klimatologi.id_kecamatan', $request->kecamatan)
-            ->where('tb_klimatologi.triwulan', $request->triwulan)
-            ->whereYear('tb_klimatologi.created_at', $request->tahun)
+        $cek = Potensi::where('tb_potensi.id_kecamatan', $request->kecamatan)
+            ->where('tb_potensi.triwulan', $request->triwulan)
+            ->whereYear('tb_potensi.date', $request->tahun)
             ->get();
-
-        $cek2 = Vektor::select('tb_vektor.id_kecamatan', 'tb_vektor.created_at')
-            ->where('tb_vektor.id_kecamatan', $request->kecamatan)
-            ->where('tb_vektor.triwulan', $request->triwulan)
-            ->whereYear('tb_vektor.created_at', $request->tahun)
-            ->get();
-
-        if (count($cek) > 0 && count($cek2) > 0) {
+        
+        if (count($cek) > 0 ) {
             return redirect()->back()->with('info', "Data Sudah Tersedia");
         } else {
+            $fuzzy = $this->fuzzyService->Fuzzy($request);
+            $nilaiFuzzy = $fuzzy['result'][0];
+            $implikasi = implode(",",$fuzzy['result'][2]);
+            $ch = $fuzzy['fuzzyfikasi']['CH'];
+            $hh = $fuzzy['fuzzyfikasi']['HH'];
+            $abj = $fuzzy['fuzzyfikasi']['ABJ'];
+            $suhu = $fuzzy['fuzzyfikasi']['suhu'];
+            $kelembaban = $fuzzy['fuzzyfikasi']['kelembaban'];
+
+
+        // return $fuzzy['fuzzyfikasi']['CH'];
+
             $request->validate([
                 'kecamatan' => 'required',
                 'curah_hujan' => 'required',
@@ -268,13 +268,23 @@ class PotensiController extends Controller
 
                 // Fuzzy
                 $fuzzy = new Fuzzy();
-                $fuzzy->id_rule = $idRuleFuzzy;
+                // $fuzzy->id_rule = NULL;
                 $fuzzy->nilai = $nilaiFuzzy;
                 $fuzzy->potensi = $this->nilaiPotensi($nilaiFuzzy);
                 $fuzzy->is_valid = $this->nilaiPotensi($nilaiFuzzy) == $this->nilaiPotensiIr($request->ir) ? true : false;
+                $fuzzy->implikasi = $implikasi;
                 $fuzzy->save();
 
-
+                $fuzzyfikasi = new Fuzzyfikasi();
+                $fuzzyfikasi->id_fuzzy = $fuzzy->id;
+                $fuzzyfikasi->curah_hujan = $ch;
+                $fuzzyfikasi->hari_hujan = $hh;
+                $fuzzyfikasi->abj = $abj;
+                $fuzzyfikasi->suhu = $suhu;
+                $fuzzyfikasi->kelembaban = $kelembaban;
+                $fuzzyfikasi->save();
+                
+                
                 $potensi = new Potensi();
                 $potensi->id_kecamatan = $request->kecamatan;
                 $potensi->id_vektor = $vektor->id;
@@ -283,6 +293,9 @@ class PotensiController extends Controller
                 $potensi->date = $request->tahun . "-01-01";
                 $potensi->triwulan = $request->triwulan;
                 $potensi->save();
+
+                
+
 
                 return redirect()->back()->with('success', "Data Berhasil Ditambahkan");
             } catch (\Exception $e) {
@@ -301,14 +314,14 @@ class PotensiController extends Controller
      */
     public function show($id)
     {
-
         $data = Potensi::find($id);
         $vektor = Vektor::find($data->id_vektor);
         $klimatologi = Klimatologi::find($data->id_klimatologi);
         $kecamatan = Kecamatan::all();
         $fuzzy = Fuzzy::find($data->id_fuzzy);
         $rule = Rule::find($fuzzy->id_rule);
-        return view('backend.potensi.show', compact('data', 'kecamatan', 'vektor', 'klimatologi', 'rule'));
+        $fuzzyfikasi = Fuzzyfikasi::where('id_fuzzy', $data->id_fuzzy)->first();
+        return view('backend.potensi.show', compact('data', 'kecamatan', 'vektor', 'klimatologi', 'rule','fuzzyfikasi','fuzzy'));
     }
 
     /**
@@ -337,9 +350,9 @@ class PotensiController extends Controller
     {
         $potensi = Potensi::find($id);
         $fuzzy = $this->fuzzyService->Fuzzy($request);
-
-        $nilaiFuzzy = $fuzzy[0];
-        $idRuleFuzzy = $fuzzy[1];
+        $nilaiFuzzy = $fuzzy['result'][0];
+        $implikasi = implode(",",$fuzzy['result'][2]);
+        // $idRuleFuzzy = $fuzzy[1];
         // return $this->nilaiPotensiIr($request->ir);
         // return $this->nilaiPotensi($nilaiFuzzy);
         // return $this->nilaiPotensi($nilaiFuzzy) == $this->nilaiPotensiIr($request->ir) ? true : false;
@@ -360,7 +373,8 @@ class PotensiController extends Controller
 
 
         try {
-            //Vektor
+            
+            // Vektor
             $vektor = Vektor::find($potensi->id_vektor);
             $vektor->rumah_diperiksa = $request->rumah_diperiksa;
             $vektor->rumah_positif = $request->rumah_positif;
@@ -378,18 +392,32 @@ class PotensiController extends Controller
             $klimatologi->suhu = $request->suhu;
             $klimatologi->update();
 
+            $fuzzyfikasi =  Fuzzyfikasi::where('id_fuzzy',$potensi->id_fuzzy)->first();
+            $fuzzyfikasi->id_fuzzy = $potensi->id_fuzzy;
+            $fuzzyfikasi->curah_hujan = $fuzzy['fuzzyfikasi']['CH'];
+            $fuzzyfikasi->hari_hujan = $fuzzy['fuzzyfikasi']['HH'];
+            $fuzzyfikasi->abj = $fuzzy['fuzzyfikasi']['ABJ'];
+            $fuzzyfikasi->suhu = $fuzzy['fuzzyfikasi']['suhu'];
+            $fuzzyfikasi->kelembaban = $fuzzy['fuzzyfikasi']['kelembaban'];
+            $fuzzyfikasi->update();
+            
             // Fuzzy
             $fuzzy = Fuzzy::find($potensi->id_fuzzy);
-            $fuzzy->id_rule = $idRuleFuzzy;
+            $fuzzy->id_rule = NULL;
             $fuzzy->nilai = $nilaiFuzzy;
+            $fuzzy->implikasi = $implikasi;
             $fuzzy->potensi = $this->nilaiPotensi($nilaiFuzzy);
             $fuzzy->is_valid = $this->nilaiPotensi($nilaiFuzzy) == $this->nilaiPotensiIr($request->ir) ? true : false;
             $fuzzy->update();
+
+            
+            
             
             $potensi->updated_at = now();
             $potensi->update();
             return redirect()->back()->with('success', "Data Berhasil Ditambahkan");
         } catch (\Exception $e) {
+            return $e;
             return redirect()->back()->withError($e->getMessage());
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withError($e->getMessage());
@@ -407,7 +435,7 @@ class PotensiController extends Controller
         try {
             $data = Potensi::findOrFail($id);
             $data->delete();
-            return redirect()->back()->with('success', "Data Berhasil Ditambahkan");
+            return redirect()->back()->with('success', "Data Berhasil Dihapus");
         } catch (\Exception $e) {
             return redirect()->back()->withError($e->getMessage());
         } catch (\Illuminate\Database\QueryException $e) {

@@ -14,9 +14,9 @@ class FuzzyService
         $abj = $this->AngkaBebasJentik($arr['abj']);
         $kelembaban = $this->Kelembaban($arr['kelembaban'] == null ? 0 : $arr['kelembaban']);
         $suhu = $this->Suhu($arr['suhu'] == null ? 0 : $arr['suhu']);
-        // return array( array('CH' => $ch, 'hH' => $hh, 'ABJ' => $abj, 'suhu' => $suhu, 'kelembaban' => $kelembaban));
+        $fuzzyfikasi = array( 'CH' => implode(",",$ch), 'HH' => implode(",",$hh), 'ABJ' => implode(",",$abj), 'suhu' => implode(",",$suhu), 'kelembaban' => implode(",",$kelembaban));
         $rule = $this->RuleEvaluation($ch, $hh, $abj, $suhu, $kelembaban);
-        return $rule;
+        return array('result' => $rule, 'fuzzyfikasi' => $fuzzyfikasi );
     }
 
 
