@@ -103,7 +103,6 @@
             zIndexOffset : 99999999,
             orientation: "bottom",
     });
-
 });
 </script>
 @if (session('success'))

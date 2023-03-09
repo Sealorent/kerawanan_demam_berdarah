@@ -39,6 +39,7 @@
 
 <body>
     <!-- Content -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
@@ -57,7 +58,7 @@
                         </div>
                         <h3 class="text-center">DBD JEMBER</h3>
                         <p class=" text-center mb-4">Silahkan login terlebih dahulu</p>
-
+                      
                         <form id="" class="mb-3" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="mb-3">
@@ -68,17 +69,26 @@
                             <div class="mb-3 form-password-toggle">
                                 <div class="d-flex justify-content-between">
                                     <label class="form-label" for="password" value="password">Password</label>
-                                    {{-- <a href="auth-forgot-password-basic.html">
-                                        <small>Forgot Password?</small>
-                                    </a> --}}
+                                    <a href="{{ route ('password.request' )}}" style="justify-content: end;">
+                                        <small>Lupa Password ?</small>
+                                    </a>
                                 </div>
                                 <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control" name="password"
+                                    <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" name="password"
                                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                         aria-describedby="password" />
+                                    @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
+                                
                             </div>
+                            @if (!$errors->isEmpty())
+                            <p class="text-danger">Silahkan Cek Kembali Email & Password Anda</p>
+                            @endif 
                             <div class="mb-3">
                                 <button class="btn btn-primary d-grid w-100" type="submit">MASUK</button>
                             </div>

@@ -194,6 +194,7 @@
                 },
                 async: true,
                 success: function(result) {
+                    console.log(result);
                     if(result == 'empty'){
                         $('#lineChart').attr('hidden', true);
                         $('.emptyLineChart').attr('hidden', false);

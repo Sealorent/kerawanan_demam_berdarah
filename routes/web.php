@@ -31,6 +31,7 @@ Route::get('/test', [FrontendController::class, 'test'])->name('test');
 Route::get('/ujiPopulasi', [FuzzyGaController::class, 'getUjiPopulasi']);
 Route::get('/ujiGenerasi', [FuzzyGaController::class, 'getUjiGenerasi']);
 Route::get('/filter', [FrontendController::class, 'filter']);
+Route::get('/penyebaran', [FrontendController::class, 'penyebaran']);
 Route::get('/get-kasus', [DashboardController::class, 'getKasus']);
 Route::get('/getAllPotensi', [DashboardController::class, 'getAllPotensi']);
 Route::get('/updateFuzzy', [FrontendController::class, 'updateFuzzy']);

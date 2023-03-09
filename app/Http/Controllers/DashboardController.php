@@ -31,12 +31,18 @@ class DashboardController extends Controller
                 'bulan' => $this->tgl_indo($item->date),
             ];
         });
-        for ($i = 0; $i < count($map); $i++) {
-            $arr['jumlah_kasus'][] = $map[$i]['jumlah_kasus'];
-            $arr['bulan'][] = $map[$i]['bulan'];
-        }
 
-        return $arr;
+        if(count($map) > 0){
+            for ($i = 0; $i < count($map); $i++) {
+                $arr['jumlah_kasus'][] = $map[$i]['jumlah_kasus'];
+                $arr['bulan'][] = $map[$i]['bulan'];
+            }
+            return $arr;
+        }else{
+            return 'empty';
+        }
+        
+
     }
 
     public function getAllPotensi(Request $request)
@@ -48,11 +54,16 @@ class DashboardController extends Controller
             // ->join('tm_rule', 'tm_rule.id', 'tb_fuzzy.id_rule')
             ->groupBy('tb_fuzzy.potensi')
             ->get();
-        for ($i = 0; $i < count($data); $i++) {
-            $arr['potensi'][] = $data[$i]['potensi'];
-            $arr['jumlah'][] = $data[$i]['jumlah'];
+        
+        if(count($data) > 0){
+            for ($i = 0; $i < count($data); $i++) {
+                $arr['potensi'][] = $data[$i]['potensi'];
+                $arr['jumlah'][] = $data[$i]['jumlah'];
+            }
+            return $arr;
+        }else{
+            return 'empty';
         }
-        return $arr;
     }
 
     function tgl_indo($tanggal){

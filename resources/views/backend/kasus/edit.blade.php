@@ -1,39 +1,4 @@
 @extends('layouts.template')
-@push('extraCSS')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css"
-    rel="stylesheet">
-<style>
-    .leaflet-container {
-        height: 50vh;
-        width: 100%;
-    }
-
-    #caption {
-        font-size: 0.8em;
-        font-weight: bold;
-        margin-bottom: 0;
-    }
-
-    #caption_nyamuk {
-        font-size: 0.8em;
-        font-weight: bold;
-        margin-bottom: 0;
-    }
-
-    .form-label #required {
-        font-size: 1em;
-        font-weight: bold;
-        margin-bottom: 0;
-        color: red;
-    }
-
-    #required {
-        font-size: 1em;
-        margin-bottom: 0;
-        color: red;
-    }
-</style>
-@endpush
 @section('content')
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -61,10 +26,11 @@
                                             *</span></small>
                                     <div class="input-group input-group-merge ">
                                         <div class="input-group">
-                                            <input type="text" id="datepicker"
+                                            <!-- <input type="text" id="datepicker"
                                                 class="form-control  @error('date') is-invalid @enderror" name="date"
-                                                value="{{ old('date',date('m-Y',strtotime($kasus->date))  ) }}" required
-                                                disabled />
+                                                value="{{ old('date',date('m-Y')) }}" required /> -->
+                                            <input type="text" id="datepicker" class="form-control  @error('date') is-invalid @enderror" name="date"
+                                                value="{{ old('date',date('m-Y',strtotime($kasus->date))  ) }}" required disabled/>
                                             @error('tahun')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -219,7 +185,6 @@
 </div>
 @endsection
 
-{{-- Set Year Javascript --}}
 @push('extraJS')
 <script type="text/javascript">
     $(document).ready(function() {

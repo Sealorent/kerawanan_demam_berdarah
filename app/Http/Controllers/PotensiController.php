@@ -35,16 +35,18 @@ class PotensiController extends Controller
     {
         $totalValid = DB::table('tb_potensi')
                 ->selectRaw('count(potensi) as potensi')
-                ->join('tb_fuzzy', 'tb_fuzzy.id', '=', 'tb_potensi.id')
-                ->where('tb_potensi.triwulan','=', $tri)
-                ->whereYear('tb_potensi.date','=', $year)
+                ->join('tb_fuzzy', 'tb_fuzzy.id', '=', 'tb_potensi.id_fuzzy')
+                // ->where('tb_potensi.triwulan','=', $tri)
+                // ->whereYear('tb_potensi.date','=', $year)
                 ->where('tb_fuzzy.is_valid',true)
                 ->pluck('potensi')
                 ->first();
-        // return $totalData;        
-        return round($totalValid/$totalData * 100) ;
-
         
+        // Presentase ALL
+        $total = Potensi::count();
+        return round($totalValid/$total * 100);
+
+        // return round($totalValid/$totalData * 100);
     }
 
     public function nilaiPotensi($nilai)
@@ -160,6 +162,8 @@ class PotensiController extends Controller
             'tb_potensi.id_kecamatan',
             'tm_kecamatan.nama_kecamatan',
             'tb_fuzzy.nilai as hasilFuzzy',
+            'tb_fuzzy.potensi as potensi',
+            'tb_fuzzy.is_valid as isValid',
             'tb_fuzzy.id_rule as ruleFuzzy',
         )
             ->join('tm_kecamatan', 'tm_kecamatan.id', 'tb_potensi.id_kecamatan')
@@ -171,7 +175,6 @@ class PotensiController extends Controller
             ->get();
 
         $presentase = $this->getPresentase($tri,$reqyear,count($dataKli));
-            
         $data = array();
         // groupBy berdasarkan nama kecamatan
         $data = collect($dataKli)->groupBy('nama_kecamatan')->map(function ($item) {
@@ -268,7 +271,7 @@ class PotensiController extends Controller
 
                 // Fuzzy
                 $fuzzy = new Fuzzy();
-                // $fuzzy->id_rule = NULL;
+                // $fuzzy->id_rule = NULL;  
                 $fuzzy->nilai = $nilaiFuzzy;
                 $fuzzy->potensi = $this->nilaiPotensi($nilaiFuzzy);
                 $fuzzy->is_valid = $this->nilaiPotensi($nilaiFuzzy) == $this->nilaiPotensiIr($request->ir) ? true : false;
@@ -293,9 +296,6 @@ class PotensiController extends Controller
                 $potensi->date = $request->tahun . "-01-01";
                 $potensi->triwulan = $request->triwulan;
                 $potensi->save();
-
-                
-
 
                 return redirect()->back()->with('success', "Data Berhasil Ditambahkan");
             } catch (\Exception $e) {
@@ -350,6 +350,7 @@ class PotensiController extends Controller
     {
         $potensi = Potensi::find($id);
         $fuzzy = $this->fuzzyService->Fuzzy($request);
+        // return $fuzzy;
         $nilaiFuzzy = $fuzzy['result'][0];
         $implikasi = implode(",",$fuzzy['result'][2]);
         // $idRuleFuzzy = $fuzzy[1];
@@ -373,7 +374,7 @@ class PotensiController extends Controller
 
 
         try {
-            
+            // return $potensi->id_fuzzy;
             // Vektor
             $vektor = Vektor::find($potensi->id_vektor);
             $vektor->rumah_diperiksa = $request->rumah_diperiksa;
@@ -392,7 +393,17 @@ class PotensiController extends Controller
             $klimatologi->suhu = $request->suhu;
             $klimatologi->update();
 
-            $fuzzyfikasi =  Fuzzyfikasi::where('id_fuzzy',$potensi->id_fuzzy)->first();
+            // $fuzzyfikasi = new Fuzzyfikasi();
+            // $fuzzyfikasi->id_fuzzy = $potensi->id_fuzzy;
+            // $fuzzyfikasi->curah_hujan = $fuzzy['fuzzyfikasi']['CH'];
+            // $fuzzyfikasi->hari_hujan = $fuzzy['fuzzyfikasi']['HH'];
+            // $fuzzyfikasi->abj = $fuzzy['fuzzyfikasi']['ABJ'];
+            // $fuzzyfikasi->suhu = $fuzzy['fuzzyfikasi']['suhu'];
+            // $fuzzyfikasi->kelembaban = $fuzzy['fuzzyfikasi']['kelembaban'];
+            // $fuzzyfikasi->save();
+            
+            // update
+            $fuzzyfikasi = Fuzzyfikasi::where('id_fuzzy',$potensi->id_fuzzy)->first();
             $fuzzyfikasi->id_fuzzy = $potensi->id_fuzzy;
             $fuzzyfikasi->curah_hujan = $fuzzy['fuzzyfikasi']['CH'];
             $fuzzyfikasi->hari_hujan = $fuzzy['fuzzyfikasi']['HH'];
@@ -408,9 +419,10 @@ class PotensiController extends Controller
             $fuzzy->implikasi = $implikasi;
             $fuzzy->potensi = $this->nilaiPotensi($nilaiFuzzy);
             $fuzzy->is_valid = $this->nilaiPotensi($nilaiFuzzy) == $this->nilaiPotensiIr($request->ir) ? true : false;
+            // return $this->nilaiPotensi($nilaiFuzzy).";  ".  $this->nilaiPotensiIr($request->ir);
             $fuzzy->update();
-
             
+
             
             
             $potensi->updated_at = now();

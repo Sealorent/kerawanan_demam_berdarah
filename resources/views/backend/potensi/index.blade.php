@@ -56,7 +56,7 @@
                                             <th class=" align-middle" rowspan="2">Kecamatan</th>
                                             <th class="text-center" colspan="3">Fuzzy </th>
                                             <th class="text-center align-middle" rowspan="2">Opsi</th>
-                                            <!-- <th class="text-center align-middle" rowspan="2">rule</th> -->
+                                            <th class="text-center align-middle" rowspan="2">rule</th>
                                         </tr>
                                         <tr>
                                             <th class=" text-center">Hasil </th>
@@ -75,16 +75,17 @@
                                         }else{
                                             $potensiFuzzy = 'tinggi';
                                         }
-                                        $kasus = \App\Models\Vektor::select('ir')->where('id',$item[0]['id_vektor'])->pluck('ir')[0];
+                                        $ir = \App\Models\Vektor::select('ir')->where('id',$item[0]['id_vektor'])->pluck('ir')[0];
                                         $abj = \App\Models\Vektor::select('abj')->where('id', $item[0]['id_vektor'])->pluck('abj')[0];
                                         @endphp
                                         <tr>
                                             <td><strong>{{ $loop->iteration }}</strong></td>
-
                                             <td><strong>{{ $item[0]['nama_kecamatan']}}</strong></td>
                                             <td class="text-center"><strong>{{ $item[0]['hasilFuzzy'] }} %</strong></td>
-                                            <td class="text-center"><strong>{{ $potensiFuzzy }}</strong></td>
-                                            <td class="text-center"><strong>{{ $kasus }}</strong></td>
+                                            <td class="text-center"><strong>{{ $item[0]['potensi'] }}</strong></td>
+                                            <td class="text-center"><strong>{{ $ir }}</strong></td>
+                                            <td class="text-center"><strong>{{ $item[0]['isValid'] }}</strong></td>
+
                                             <td class="text-center">
                                                 <a href="{{ route('potensi.edit', $item[0]['id']) }}">
                                                     <button type="button" class="btn btn-primary btn-icon">

@@ -91,8 +91,7 @@
                                             <select id="triwulan" name="triwulan"
                                                 class="select2 form-select  @error('triwulan') is-invalid @enderror">
                                                 <option value="">--- Pilih triwulan ---</option>
-                                                <option value="1" selected>Triwulan 1</option>
-                                                {{-- @foreach ($triwulan as $key => $value )
+                                                 @foreach ($triwulan as $key => $value )
                                                 @if ( old('triwulan') )
                                                 <option value="{{ $key }}" selected>{{ $value
                                                     }}
@@ -101,7 +100,7 @@
                                                 <option value="{{ $key }}">{{ $value }}
                                                 </option>
                                                 @endif
-                                                @endforeach --}}
+                                                @endforeach 
                                             </select>
                                             @error('triwulan')
                                             <div class="invalid-feedback">

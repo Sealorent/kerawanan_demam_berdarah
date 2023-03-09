@@ -42,7 +42,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header">
                         <div class="d-flex align-items-start justify-content-between">
-                            <h5 class="card-title text-primary">Tambah Data Kasus</h5>
+                            <h5 class="card-title text-primary">Detail Data Kasus</h5>
                         </div>
                         <hr class="my-0" />
                     </div>

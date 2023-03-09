@@ -427,9 +427,10 @@
                                 </table>
                             </div>
                         </div>
-                        <h4 class="card-title text-primary mt-4">Implikasi</h4>
                         <hr>
-                        <div class="row col-4">
+                        <div class="row ">
+                            <div class="col-4">
+                                <h4 class="card-title text-primary mt-4">Implikasi</h4>
                                 <table class="table table-bordered">
                                     <tbody>
                                     @foreach($implikasi as $item)
@@ -440,6 +441,11 @@
                                     @endforeach
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="col-4">
+                                <h4 class="card-title text-primary mt-4">Defuzzykasi</h4>
+                                <h4>Hasil Potensi  : {{$fuzzy->nilai }} %</h4>
+                            </div>
                         </div>  
                     </div>
                 <!-- /Account -->

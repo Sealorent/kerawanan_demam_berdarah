@@ -2,37 +2,6 @@
 @push('extraCSS')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css"
     rel="stylesheet">
-<style>
-    .leaflet-container {
-        height: 50vh;
-        width: 100%;
-    }
-
-    #caption {
-        font-size: 0.8em;
-        font-weight: bold;
-        margin-bottom: 0;
-    }
-
-    #caption_nyamuk {
-        font-size: 0.8em;
-        font-weight: bold;
-        margin-bottom: 0;
-    }
-
-    .form-label #required {
-        font-size: 1em;
-        font-weight: bold;
-        margin-bottom: 0;
-        color: red;
-    }
-
-    #required {
-        font-size: 1em;
-        margin-bottom: 0;
-        color: red;
-    }
-</style>
 @endpush
 @section('content')
 <div class="content-wrapper">

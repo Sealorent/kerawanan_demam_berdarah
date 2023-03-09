@@ -28,7 +28,7 @@ class KasusController extends Controller
     public function index(Request $request)
     {
         $month = explode('-', $request->date)[1] ?? date('m');
-        $year = explode('-', $request->date)[0] == null ? date('Y') : explode('-', $request->date)[0];
+        $year = explode('-', $request->date)[0] == null ? date('Y', strtotime('-2 year')) : explode('-', $request->date)[0];
         $dataKli = Kasus::select(
             'tb_kasus.*',
             'tb_kasus.id_kecamatan',

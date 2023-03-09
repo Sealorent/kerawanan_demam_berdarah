@@ -42,7 +42,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header">
                         <div class="d-flex align-items-start justify-content-between">
-                            <h5 class="card-title text-primary">Tambah Data Klimatologi </h5>
+                            <h5 class="card-title text-primary">Edit Data Klimatologi </h5>
                         </div>
                         <hr class="my-0" />
                     </div>
@@ -271,7 +271,7 @@
                             </div>
                             <div class="mt-5">
                                 <button type="submit" class="btn btn-primary me-2">Simpan</button>
-                                <a class="btn btn-outline-secondary" href="{{ route('klimatologi.index') }}">Batal</a>
+                                <a class="btn btn-outline-secondary" href="{{ route('potensi.index') }}">Batal</a>
                             </div>
                         </form>
                         {{-- <div id="map"></div> --}}

@@ -8,6 +8,7 @@ use App\Models\Kasus;
 use App\Models\Klimatologi;
 use App\Models\Potensi;
 use App\Models\Rule;
+use App\Models\Tindakan;
 use App\Models\Vektor;
 use App\Service\FuzzyService;
 use App\Service\GeneticService;
@@ -116,8 +117,8 @@ class FrontendController extends Controller
         for ($i = 0; $i < count($data); $i++) {
             $fuzzy = Fuzzy::find($data[$i]['id']);
             $fuzzy->nilai = $this->fuzzyService->Fuzzy($data[$i])[0];
-            $fuzzy->potensi =$this->nilaiPotensi($this->fuzzyService->Fuzzy($data[$i])[0]);
-            $fuzzy->is_valid = $this->nilaiPotensi($this->fuzzyService->Fuzzy($data[$i])[0]) == $this->nilaiPotensiIr($data[$i]['ir']) ? true : false;
+            $fuzzy->potensi =$this->nilaiPotensi($this->fuzzyService->Fuzzy($data[$i])['result'][0]);
+            $fuzzy->is_valid = $this->nilaiPotensi($this->fuzzyService->Fuzzy($data[$i])['result'][0]) == $this->nilaiPotensiIr($data[$i]['ir']) ? true : false;
             $fuzzy->update();
         }
 
@@ -144,19 +145,41 @@ class FrontendController extends Controller
 
         $map = $dataKli->map(function ($item, $key) {
             return [
-                'potensi' => $this->getPotensi($item->hasilFuzzy),
+                'potensi' => $item->potensi,
                 'triwulan' => $this->getTriwulan($item->triwulan),
                 'kecamatan' => $item->nama_kecamatan,
-                'kasus_dbd' => $this->getKasusDbd($item->id_vektor),
-                'arr_kasus' => $this->getKasusTriwulan($item->triwulan, $item->date, $item->id_kecamatan),
+                'ir' => $item->ir,
+                'tindakan' => $this->getTindakan($item->potensi),
+                'kasus_dbd' => $this->getKasusDbd($item->triwulan, date('Y',strtotime($item->date)), $item->id_kecamatan) ?? 0,
+                'arr_kasus' => $this->getKasusTriwulan($item->triwulan, date('Y',strtotime($item->date)), $item->id_kecamatan),
             ];
         });
 
         return $map;
     }
-    public function getKasusDbd($id_vektor)
+
+    public function penyebaran(Request $request)
     {
-        return Vektor::select('kasus_dbd')->where('id', $id_vektor)->first()->kasus_dbd;
+        $longlat = Kasus::select('tb_detail_kasus.longitude','tb_detail_kasus.latitude')
+                        ->join('tb_detail_kasus','tb_detail_kasus.id_kasus', 'tb_kasus.id')
+                        ->where('tb_kasus.triwulan', $request->triwulan)
+                        ->whereYear('tb_kasus.date', $request->date)
+                        ->get();
+
+        $arr = array();  
+        foreach ($longlat as $key => $value) {
+            $arr[$key][] = $value['latitude'];
+            $arr[$key][] = $value['longitude'];
+        }
+        return $arr;
+    }
+    public function getKasusDbd($triwulan,$tahun,$idKecamatan)
+    {
+        return  Kasus::select('total_kasus')
+        ->where('tb_kasus.triwulan', $triwulan)
+        ->whereYear('tb_kasus.date', $tahun)
+        ->where('tb_kasus.id_kecamatan', $idKecamatan)
+        ->pluck('total_kasus')->first();
     }
     public function getPotensi($potensi)
     {
@@ -190,12 +213,18 @@ class FrontendController extends Controller
                 break;
         }
     }
+
+    public function getTindakan($potensi)
+    {
+        return Tindakan::select('tindakan')->where('potensi', $potensi)->pluck('tindakan')->first();
+    } 
     public function getKasusTriwulan($triwulan,$date,$idKecamatan)
     {
-             $longlat = Kasus::select('tb_detail_kasus.longitude','tb_detail_kasus.latitude')
+            $longlat = Kasus::select('tb_detail_kasus.longitude','tb_detail_kasus.latitude')
                                     ->join('tb_detail_kasus','tb_detail_kasus.id_kasus', 'tb_kasus.id')
                                     ->where('tb_kasus.triwulan', $triwulan)
                                     ->where('tb_kasus.id_kecamatan', $idKecamatan)
+                                    ->whereYear('tb_kasus.date', $date)
                                     ->get();
             $arr = array();  
             foreach ($longlat as $key => $value) {
